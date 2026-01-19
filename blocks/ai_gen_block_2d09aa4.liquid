@@ -1,0 +1,44 @@
+{% doc %}
+  @prompt
+    could we generate block. that is just to be used as an anchor link. It will have no height etc I just add where I need to jump.
+{% enddoc %}
+
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-anchor-{{ ai_gen_id }} {
+    display: block;
+    height: 0;
+    width: 0;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+{% endstyle %}
+
+<div
+  id="{{ block.settings.anchor_id }}"
+  class="ai-anchor-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+></div>
+
+{% schema %}
+{
+  "name": "Anchor link",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "info": "Use this ID in links (e.g., #your-anchor-id)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Anchor link"
+    }
+  ]
+}
+{% endschema %}

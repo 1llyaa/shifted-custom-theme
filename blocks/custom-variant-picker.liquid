@@ -1,0 +1,938 @@
+{% doc %}
+  @prompt
+    Custom variant picker section with swatches. Independent section that works with Section Rendering API.
+    Can be placed anywhere in the product template.
+{% enddoc %}
+{% assign ai_gen_id = section.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-variant-picker-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-variant-picker__container-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-variant-picker__option-group-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+  }
+
+  .ai-variant-picker__option-group-{{ ai_gen_id }}.hidden {
+    display: none;
+  }
+
+  .ai-variant-picker__label-{{ ai_gen_id }} {
+    font-size: {{ section.settings.label_font_size }}px;
+    font-weight: 600;
+    color: {{ section.settings.label_color }};
+    margin: 0;
+  }
+
+  .ai-variant-picker__swatches-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ section.settings.swatch_spacing }}px;
+  }
+
+  .ai-variant-picker__dropdown-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: {{ section.settings.label_font_size }}px;
+    border: 2px solid {{ section.settings.swatch_border_color }};
+    border-radius: {{ section.settings.swatch_border_radius }}px;
+    background-color: {{ section.settings.swatch_background }};
+    color: {{ section.settings.swatch_text_color }};
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .ai-variant-picker__dropdown-{{ ai_gen_id }}:hover {
+    border-color: {{ section.settings.swatch_hover_border_color }};
+    background-color: {{ section.settings.swatch_hover_background }};
+  }
+
+  .ai-variant-picker__dropdown-{{ ai_gen_id }}:focus {
+    outline: 2px solid {{ section.settings.selected_border_color }};
+    outline-offset: 2px;
+  }
+
+  .ai-variant-picker__swatch-{{ ai_gen_id }} {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .ai-variant-picker__swatch-input-{{ ai_gen_id }} {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .ai-variant-picker__swatch-label-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ section.settings.swatch_width }}px;
+    height: {{ section.settings.swatch_height }}px;
+    border: {{ section.settings.swatch_border_width }}px solid {{ section.settings.swatch_border_color }};
+    border-radius: {{ section.settings.swatch_border_radius }}px;
+    background-color: {{ section.settings.swatch_background }};
+    color: {{ section.settings.swatch_text_color }};
+    font-size: {{ section.settings.swatch_text_size }}px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-variant-picker__swatch-label-{{ ai_gen_id }}:hover {
+    border-color: {{ section.settings.swatch_hover_border_color }};
+    background-color: {{ section.settings.swatch_hover_background }};
+    transform: translateY(-2px);
+  }
+
+  .ai-variant-picker__swatch-input-{{ ai_gen_id }}:checked + .ai-variant-picker__swatch-label-{{ ai_gen_id }} {
+    border-color: {{ section.settings.selected_border_color }};
+    background-color: {{ section.settings.selected_background }};
+    color: {{ section.settings.selected_text_color }};
+    border-width: {{ section.settings.selected_border_width }}px;
+  }
+
+  .ai-variant-picker__swatch-input-{{ ai_gen_id }}:disabled + .ai-variant-picker__swatch-label-{{ ai_gen_id }} {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-variant-picker__swatch-input-{{ ai_gen_id }}:disabled + .ai-variant-picker__swatch-label-{{ ai_gen_id }}:hover {
+    transform: none;
+  }
+
+  .ai-variant-picker__swatch-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .ai-variant-picker__swatch-text-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
+    padding: 0 8px;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .ai-variant-picker__selected-variant-{{ ai_gen_id }} {
+    margin-top: 8px;
+    padding: 12px;
+    background-color: {{ section.settings.info_background }};
+    border-radius: 8px;
+    font-size: 14px;
+    color: {{ section.settings.info_text_color }};
+  }
+
+  .ai-variant-picker__price-{{ ai_gen_id }} {
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .ai-variant-picker__unavailable-{{ ai_gen_id }} {
+    color: {{ section.settings.unavailable_color }};
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-variant-picker__swatches-{{ ai_gen_id }} {
+      gap: {{ section.settings.swatch_spacing | times: 0.8 }}px;
+    }
+
+    .ai-variant-picker__swatch-label-{{ ai_gen_id }} {
+      width: {{ section.settings.swatch_width | times: 0.9 }}px;
+      height: {{ section.settings.swatch_height | times: 0.9 }}px;
+      font-size: {{ section.settings.swatch_text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<variant-picker-{{ ai_gen_id }}
+  class="ai-variant-picker-{{ ai_gen_id }}"
+  data-product-id="{{ product.id }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="ai-variant-picker__container-{{ ai_gen_id }}">
+    {% for option in product.options_with_values %}
+      {% assign display_type = 'swatch' %}
+      {% if option.position == 1 %}
+        {% assign display_type = section.settings.option1_display_type %}
+      {% elsif option.position == 2 %}
+        {% assign display_type = section.settings.option2_display_type %}
+      {% elsif option.position == 3 %}
+        {% assign display_type = section.settings.option3_display_type %}
+      {% endif %}
+
+      <div 
+        class="ai-variant-picker__option-group-{{ ai_gen_id }}"
+        data-option-name="{{ option.name }}"
+        data-option-position="{{ option.position }}"
+      >
+        <label class="ai-variant-picker__label-{{ ai_gen_id }}">
+          {{ option.name }}
+        </label>
+
+        {% if display_type == 'dropdown' %}
+          {%- comment -%} Dropdown display {%- endcomment -%}
+          <select
+            class="ai-variant-picker__dropdown-{{ ai_gen_id }}"
+            data-option-position="{{ option.position }}"
+            data-option-selector
+          >
+            {% for value in option.values %}
+              <option
+                value="{{ value | escape }}"
+                {% if option.selected_value == value %}selected{% endif %}
+              >
+                {{ value }}
+              </option>
+            {% endfor %}
+          </select>
+        {% else %}
+          {%- comment -%} Swatch display {%- endcomment -%}
+          <div class="ai-variant-picker__swatches-{{ ai_gen_id }}">
+            {% for value in option.values %}
+              {% assign option_index = option.position | minus: 1 %}
+              {% assign value_handle = value | handleize %}
+              
+              <div class="ai-variant-picker__swatch-{{ ai_gen_id }}">
+                <input
+                  type="radio"
+                  id="ai-variant-{{ ai_gen_id }}-{{ option.name | handleize }}-{{ value_handle }}"
+                  name="ai-variant-option-{{ ai_gen_id }}-{{ option.position }}"
+                  value="{{ value | escape }}"
+                  class="ai-variant-picker__swatch-input-{{ ai_gen_id }}"
+                  data-option-position="{{ option.position }}"
+                  {% if option.selected_value == value %}checked{% endif %}
+                >
+                <label
+                  for="ai-variant-{{ ai_gen_id }}-{{ option.name | handleize }}-{{ value_handle }}"
+                  class="ai-variant-picker__swatch-label-{{ ai_gen_id }}"
+                  title="{{ value | escape }}"
+                >
+                  {% if section.settings.show_swatch_images %}
+                    {% assign swatch_image = null %}
+                    
+                    {% if section.settings.swatch_image_source == 'metafield' %}
+                      {% comment %}
+                        Use custom metafield for swatch image
+                      {% endcomment %}
+                      
+                      {% comment %} Get currently selected values {% endcomment %}
+                      {% assign current_option_values = '' | split: '' %}
+                      {% for opt in product.options_with_values %}
+                        {% assign temp_array = opt.selected_value | split: '|' %}
+                        {% assign current_option_values = current_option_values | concat: temp_array %}
+                      {% endfor %}
+                      
+                      {% comment %} Find matching variant {% endcomment %}
+                      {% for variant in product.variants %}
+                        {% assign matches = true %}
+                        
+                        {% for variant_option in variant.options %}
+                          {% assign variant_option_index = forloop.index0 %}
+                          
+                          {% if variant_option_index == option_index %}
+                            {% if variant_option != value %}
+                              {% assign matches = false %}
+                              {% break %}
+                            {% endif %}
+                          {% else %}
+                            {% if variant_option != current_option_values[variant_option_index] %}
+                              {% assign matches = false %}
+                              {% break %}
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                        
+                        {% if matches %}
+                          {% assign metafield_value = variant.metafields.custom.frame_photo %}
+                          
+                          {% if metafield_value %}
+                            {% assign swatch_image = metafield_value %}
+                            {% break %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      {% comment %} Featured image logic {% endcomment %}
+                      {% for variant in product.variants %}
+                        {% if variant.options[option_index] == value %}
+                          {% if variant.featured_image %}
+                            {% assign swatch_image = variant.featured_image %}
+                            {% break %}
+                          {% elsif swatch_image == null and variant.image %}
+                            {% assign swatch_image = variant.image %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                      
+                      {% if swatch_image == null %}
+                        {% for variant in product.variants %}
+                          {% if variant.options[option_index] == value and variant.available %}
+                            {% if variant.featured_image %}
+                              {% assign swatch_image = variant.featured_image %}
+                              {% break %}
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    {% endif %}
+                    
+                    {% if swatch_image %}
+                      <img
+                        src="{{ swatch_image | image_url: width: 100 }}"
+                        alt="{{ value | escape }}"
+                        class="ai-variant-picker__swatch-image-{{ ai_gen_id }}"
+                        width="100"
+                        height="100"
+                        loading="lazy"
+                      >
+                    {% endif %}
+                  {% endif %}
+                  
+                  <span class="ai-variant-picker__swatch-text-{{ ai_gen_id }}">
+                    {% if section.settings.swatch_display == 'text' or section.settings.swatch_display == 'both' %}
+                      {{ value }}
+                    {% endif %}
+                  </span>
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% if section.settings.show_selected_info %}
+      <div class="ai-variant-picker__selected-variant-{{ ai_gen_id }}" data-selected-info>
+        <div>
+          <strong>{{ section.settings.selected_label_text }}</strong>
+          <span data-variant-title>
+            {% comment %}
+              Filter variant title based on conditional logic settings
+            {% endcomment %}
+            {% if section.settings.hide_hidden_options_in_selected and section.settings.enable_conditional_logic %}
+              {% assign variant_title = product.selected_or_first_available_variant.title %}
+              {% assign title_parts = variant_title | split: ' / ' %}
+              {% assign filtered_parts = '' %}
+              {% assign target_position = section.settings.target_option_position | plus: 0 %}
+              {% assign trigger_position = section.settings.trigger_option_position | plus: 0 %}
+              {% assign trigger_value = section.settings.trigger_option_value %}
+              
+              {% assign should_hide = false %}
+              {% for option in product.selected_or_first_available_variant.options %}
+                {% assign option_position = forloop.index %}
+                {% if option_position == trigger_position and option == trigger_value %}
+                  {% assign should_hide = true %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+              
+              {% for part in title_parts %}
+                {% assign part_position = forloop.index %}
+                {% if should_hide and part_position == target_position %}
+                  {% comment %} Skip this part {% endcomment %}
+                {% else %}
+                  {% if filtered_parts != '' %}
+                    {% assign filtered_parts = filtered_parts | append: ' / ' %}
+                  {% endif %}
+                  {% assign filtered_parts = filtered_parts | append: part %}
+                {% endif %}
+              {% endfor %}
+              
+              {{ filtered_parts }}
+            {% else %}
+              {{ product.selected_or_first_available_variant.title }}
+            {% endif %}
+          </span>
+        </div>
+        <div class="ai-variant-picker__price-{{ ai_gen_id }}" data-variant-price>
+          {% if product.selected_or_first_available_variant.available %}
+            {{ product.selected_or_first_available_variant.price | money }}
+          {% else %}
+            <span class="ai-variant-picker__unavailable-{{ ai_gen_id }}">Unavailable</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</variant-picker-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class VariantPicker{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.productId = this.dataset.productId;
+        this.variants = [];
+        this.selectedOptions = {};
+        
+        // Conditional visibility configuration
+        this.conditionalRules = {
+          enabled: {{ section.settings.enable_conditional_logic | json }},
+          triggerOptionPosition: {{ section.settings.trigger_option_position | json }},
+          triggerOptionValue: {{ section.settings.trigger_option_value | json }},
+          targetOptionPosition: {{ section.settings.target_option_position | json }}
+        };
+
+        // Price formatting settings
+        this.priceSettings = {
+          locale: {{ section.settings.price_locale | json }},
+          currency: {{ section.settings.price_currency | json }},
+          showSymbol: {{ section.settings.show_currency_symbol | json }}
+        };
+
+        // Selected info settings
+        this.selectedInfoSettings = {
+          hideHiddenOptions: {{ section.settings.hide_hidden_options_in_selected | json }}
+        };
+      }
+
+      connectedCallback() {
+        this.fetchProductData();
+        this.setupEventListeners();
+      }
+
+      async fetchProductData() {
+        try {
+          const response = await fetch(`/products/${this.getProductHandle()}.js`);
+          const productData = await response.json();
+          this.variants = productData.variants;
+          this.initializeSelectedOptions();
+          
+          if (this.conditionalRules.enabled) {
+            this.updateConditionalVisibility();
+          }
+        } catch (error) {
+          console.error('Error fetching product data:', error);
+        }
+      }
+
+      getProductHandle() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
+      }
+
+      initializeSelectedOptions() {
+        // Get selected values from radio inputs (swatches)
+        const radioInputs = this.querySelectorAll('.ai-variant-picker__swatch-input-{{ ai_gen_id }}:checked');
+        radioInputs.forEach(input => {
+          const position = input.dataset.optionPosition;
+          this.selectedOptions[position] = input.value;
+        });
+
+        // Get selected values from dropdowns
+        const dropdowns = this.querySelectorAll('[data-option-selector]');
+        dropdowns.forEach(dropdown => {
+          const position = dropdown.dataset.optionPosition;
+          this.selectedOptions[position] = dropdown.value;
+        });
+      }
+
+      setupEventListeners() {
+        // Event listeners for radio inputs (swatches)
+        const radioInputs = this.querySelectorAll('.ai-variant-picker__swatch-input-{{ ai_gen_id }}');
+        radioInputs.forEach(input => {
+          input.addEventListener('change', (e) => this.handleOptionChange(e));
+        });
+
+        // Event listeners for dropdowns
+        const dropdowns = this.querySelectorAll('[data-option-selector]');
+        dropdowns.forEach(dropdown => {
+          dropdown.addEventListener('change', (e) => this.handleDropdownChange(e));
+        });
+      }
+
+      handleOptionChange(event) {
+        const input = event.target;
+        const position = input.dataset.optionPosition;
+        this.selectedOptions[position] = input.value;
+        
+        if (this.conditionalRules.enabled) {
+          this.updateConditionalVisibility();
+        }
+        
+        this.updateSelectedVariant();
+      }
+
+      handleDropdownChange(event) {
+        const dropdown = event.target;
+        const position = dropdown.dataset.optionPosition;
+        this.selectedOptions[position] = dropdown.value;
+        
+        if (this.conditionalRules.enabled) {
+          this.updateConditionalVisibility();
+        }
+        
+        this.updateSelectedVariant();
+      }
+
+      updateConditionalVisibility() {
+        try {
+          const { triggerOptionPosition, triggerOptionValue, targetOptionPosition } = this.conditionalRules;
+          const selectedTriggerValue = this.selectedOptions[triggerOptionPosition];
+          const targetOptionGroup = this.querySelector(
+            `.ai-variant-picker__option-group-{{ ai_gen_id }}[data-option-position="${targetOptionPosition}"]`
+          );
+          
+          if (!targetOptionGroup) return;
+          
+          if (selectedTriggerValue === triggerOptionValue) {
+            targetOptionGroup.classList.add('hidden');
+          } else {
+            targetOptionGroup.classList.remove('hidden');
+          }
+        } catch (error) {
+          console.error('Error in conditional visibility logic:', error);
+        }
+      }
+
+      async updateSelectedVariant() {
+        const selectedVariant = this.variants.find(variant => 
+          this.variantMatchesOptions(variant, this.selectedOptions)
+        );
+
+        if (!selectedVariant) return;
+
+        // Update URL and refresh page
+        // Since picker is now a separate section, page refresh is clean and simple
+        this.updateURLAndRefresh(selectedVariant);
+      }
+
+      updateURLAndRefresh(variant) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('variant', variant.id);
+        window.location.href = url.toString();
+      }
+
+      variantMatchesOptions(variant, options) {
+        return Object.keys(options).every(position => {
+          const optionIndex = parseInt(position) - 1;
+          return variant.options[optionIndex] === options[position];
+        });
+      }
+
+      formatMoney(cents) {
+        const amount = cents / 100;
+        
+        try {
+          const options = {
+            style: 'currency',
+            currency: this.priceSettings.currency
+          };
+          
+          if (!this.priceSettings.showSymbol) {
+            options.currencyDisplay = 'code';
+          }
+          
+          return new Intl.NumberFormat(this.priceSettings.locale, options).format(amount);
+        } catch (error) {
+          console.error('Error formatting price:', error);
+          return new Intl.NumberFormat('cs-CZ', {
+            style: 'currency',
+            currency: 'CZK'
+          }).format(amount);
+        }
+      }
+    }
+
+    customElements.define('variant-picker-{{ ai_gen_id }}', VariantPicker{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Variant Picker",
+  "tag": "null",
+  "class": "section-variant-picker",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Display type per option"
+    },
+    {
+      "type": "select",
+      "id": "option1_display_type",
+      "label": "Option 1 display type",
+      "options": [
+        {
+          "value": "swatch",
+          "label": "Swatch"
+        },
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        }
+      ],
+      "default": "swatch",
+      "info": "Choose how to display the first option"
+    },
+    {
+      "type": "select",
+      "id": "option2_display_type",
+      "label": "Option 2 display type",
+      "options": [
+        {
+          "value": "swatch",
+          "label": "Swatch"
+        },
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        }
+      ],
+      "default": "swatch",
+      "info": "Choose how to display the second option"
+    },
+    {
+      "type": "select",
+      "id": "option3_display_type",
+      "label": "Option 3 display type",
+      "options": [
+        {
+          "value": "swatch",
+          "label": "Swatch"
+        },
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        }
+      ],
+      "default": "swatch",
+      "info": "Choose how to display the third option"
+    },
+    {
+      "type": "header",
+      "content": "Conditional visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_conditional_logic",
+      "label": "Enable conditional visibility",
+      "default": false,
+      "info": "Hide options based on other option values"
+    },
+    {
+      "type": "text",
+      "id": "trigger_option_position",
+      "label": "Trigger option position",
+      "default": "1",
+      "info": "Position of the option that triggers visibility (1, 2, or 3)"
+    },
+    {
+      "type": "text",
+      "id": "trigger_option_value",
+      "label": "Trigger option value",
+      "default": "Raw print",
+      "info": "When this value is selected, hide the target option"
+    },
+    {
+      "type": "text",
+      "id": "target_option_position",
+      "label": "Target option position to hide",
+      "default": "2",
+      "info": "Position of the option to hide (1, 2, or 3)"
+    },
+    {
+      "type": "header",
+      "content": "Option label"
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Swatch style"
+    },
+    {
+      "type": "select",
+      "id": "swatch_display",
+      "label": "Display",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text only"
+        },
+        {
+          "value": "image",
+          "label": "Image only"
+        },
+        {
+          "value": "both",
+          "label": "Image and text"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatch_images",
+      "label": "Show variant images",
+      "default": true,
+      "info": "Display variant images as swatch backgrounds"
+    },
+    {
+      "type": "select",
+      "id": "swatch_image_source",
+      "label": "Swatch image source",
+      "options": [
+        {
+          "value": "metafield",
+          "label": "Custom metafield"
+        },
+        {
+          "value": "featured",
+          "label": "Variant featured image"
+        }
+      ],
+      "default": "metafield",
+      "info": "Choose where to get swatch images from"
+    },
+    {
+      "type": "text",
+      "id": "swatch_metafield_key",
+      "label": "Metafield key",
+      "default": "custom.frame_photo",
+      "info": "Variant metafield path (e.g., custom.frame_photo)"
+    },
+    {
+      "type": "range",
+      "id": "swatch_width",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Width",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "swatch_height",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Height",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "swatch_spacing",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "swatch_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "swatch_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Default state"
+    },
+    {
+      "type": "color",
+      "id": "swatch_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "swatch_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "swatch_border_color",
+      "label": "Border",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "swatch_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Hover state"
+    },
+    {
+      "type": "color",
+      "id": "swatch_hover_background",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "swatch_hover_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Selected state"
+    },
+    {
+      "type": "color",
+      "id": "selected_background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "selected_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "selected_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "selected_border_width",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Selected variant info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_selected_info",
+      "label": "Show selected info",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "selected_label_text",
+      "label": "Selected label text",
+      "default": "Selected:",
+      "info": "Customize the label shown before variant title"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_hidden_options_in_selected",
+      "label": "Hide hidden options from selected text",
+      "default": true,
+      "info": "When conditional logic hides an option, exclude it from the selected variant title"
+    },
+    {
+      "type": "header",
+      "content": "Price formatting"
+    },
+    {
+      "type": "text",
+      "id": "price_locale",
+      "label": "Price locale",
+      "default": "cs-CZ",
+      "info": "Format: language-COUNTRY (e.g., en-US, de-DE, fr-FR)"
+    },
+    {
+      "type": "text",
+      "id": "price_currency",
+      "label": "Currency code",
+      "default": "CZK",
+      "info": "ISO currency code (e.g., USD, EUR, GBP, CZK)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_symbol",
+      "label": "Show currency symbol",
+      "default": true,
+      "info": "Display currency symbol instead of code"
+    },
+    {
+      "type": "color",
+      "id": "info_background",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "info_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "unavailable_color",
+      "label": "Unavailable text",
+      "default": "#999999"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Variant Picker"
+    }
+  ],
+  
+}
+{% endschema %}

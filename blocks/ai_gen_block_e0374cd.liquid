@@ -1,0 +1,381 @@
+{% doc %}
+  @prompt
+    button with color customization etc., can we make rotate arrow down when hover
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-custom-button-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-custom-button-{{ ai_gen_id }} {
+      width: {{ block.settings.desktop_width_percent }}%;
+    }
+  }
+
+  .ai-custom-button-wrapper-{{ ai_gen_id }} {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .ai-custom-button-link-{{ ai_gen_id }} {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    font-size: {{ block.settings.font_size }}px;
+    font-weight: {{ block.settings.font_weight }};
+    text-decoration: none;
+    text-transform: {% if block.settings.text_uppercase %}uppercase{% else %}none{% endif %};
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    {% if block.settings.full_width %}
+      width: 100%;
+    {% endif %}
+  }
+
+  .ai-custom-button-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.border_hover_color }};
+    transform: {% if block.settings.hover_effect == 'lift' %}translateY(-2px){% elsif block.settings.hover_effect == 'scale' %}scale(1.05){% else %}none{% endif %};
+  }
+
+  .ai-custom-button-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    transition: transform 0.3s ease;
+    {% if block.settings.icon_position == 'left' %}
+      margin-right: 8px;
+    {% else %}
+      margin-left: 8px;
+    {% endif %}
+  }
+
+  .ai-custom-button-link-{{ ai_gen_id }}:hover .ai-custom-button-icon-{{ ai_gen_id }} {
+    transform: rotate(90deg);
+  }
+{% endstyle %}
+
+<div class="ai-custom-button-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-custom-button-wrapper-{{ ai_gen_id }}">
+    <a
+      href="{{ block.settings.button_link }}"
+      class="ai-custom-button-link-{{ ai_gen_id }}"
+    >
+      {% if block.settings.show_icon and block.settings.icon_position == 'left' %}
+        <svg class="ai-custom-button-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          {% if block.settings.icon_type == 'arrow-right' %}
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          {% elsif block.settings.icon_type == 'shopping-cart' %}
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          {% elsif block.settings.icon_type == 'heart' %}
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          {% elsif block.settings.icon_type == 'star' %}
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          {% elsif block.settings.icon_type == 'check' %}
+            <polyline points="20 6 9 17 4 12"></polyline>
+          {% endif %}
+        </svg>
+      {% endif %}
+
+      {{ block.settings.button_text }}
+
+      {% if block.settings.show_icon and block.settings.icon_position == 'right' %}
+        <svg class="ai-custom-button-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          {% if block.settings.icon_type == 'arrow-right' %}
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          {% elsif block.settings.icon_type == 'shopping-cart' %}
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          {% elsif block.settings.icon_type == 'heart' %}
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          {% elsif block.settings.icon_type == 'star' %}
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          {% elsif block.settings.icon_type == 'check' %}
+            <polyline points="20 6 9 17 4 12"></polyline>
+          {% endif %}
+        </svg>
+      {% endif %}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom button",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Button content"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Hover border color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_uppercase",
+      "label": "Uppercase text",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show icon",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "icon_type",
+      "label": "Icon type",
+      "options": [
+        {
+          "value": "arrow-right",
+          "label": "Arrow right"
+        },
+        {
+          "value": "shopping-cart",
+          "label": "Shopping cart"
+        },
+        {
+          "value": "heart",
+          "label": "Heart"
+        },
+        {
+          "value": "star",
+          "label": "Star"
+        },
+        {
+          "value": "check",
+          "label": "Check"
+        }
+      ],
+      "default": "arrow-right"
+    },
+    {
+      "type": "select",
+      "id": "icon_position",
+      "label": "Icon position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width button",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "lift",
+          "label": "Lift"
+        },
+        {
+          "value": "scale",
+          "label": "Scale"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom button"
+    }
+  ]
+}
+{% endschema %}
