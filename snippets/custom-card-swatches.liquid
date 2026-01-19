@@ -1,0 +1,126 @@
+{% doc %}
+  Renders color swatches for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign option_name = block.settings.option_name
+  assign swatch_size = block.settings.swatch_size
+  assign swatch_gap = block.settings.swatch_gap
+  assign border_radius = block.settings.border_radius
+  assign border_color = block.settings.border_color
+  assign active_border_color = block.settings.active_border_color
+  
+  assign color_option = nil
+  assign color_option_index = nil
+  
+  if product != blank
+    for option in product.options_with_values
+      assign downcased_option = option.name | downcase
+      assign downcased_setting = option_name | downcase
+      if downcased_option == downcased_setting
+        assign color_option = option
+        assign color_option_index = forloop.index0
+        break
+      endif
+    endfor
+  endif
+%}
+
+{% style %}
+  .custom-card-swatches-{{ section_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ swatch_gap }}px;
+  }
+
+  .custom-card-swatches-{{ section_id }} .swatch {
+    width: {{ swatch_size }}px;
+    height: {{ swatch_size }}px;
+    border-radius: {{ border_radius }}%;
+    border: 2px solid {{ border_color }};
+    cursor: pointer;
+    transition: border-color 200ms ease, transform 150ms ease;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .custom-card-swatches-{{ section_id }} .swatch:hover {
+    border-color: {{ active_border_color }};
+    transform: scale(1.1);
+  }
+
+  .custom-card-swatches-{{ section_id }} .swatch.is-active {
+    border-color: {{ active_border_color }};
+  }
+{% endstyle %}
+
+{% if color_option != nil %}
+  <div class="custom-card-swatches-{{ section_id }}" {{ block.shopify_attributes }}>
+    {% for value in color_option.values %}
+      {% liquid
+        # Get the variant for this color to find its image
+        assign variant_image = nil
+        for variant in product.variants
+          assign variant_option = variant.options[color_option_index]
+          if variant_option == value
+            if variant.featured_image
+              assign variant_image = variant.featured_image | image_url: width: 100
+            endif
+            break
+          endif
+        endfor
+        
+        # Generate a color value from the option name
+        assign color_handle = value | handleize
+        assign color_value = value | downcase
+      %}
+      
+      <button
+        type="button"
+        class="swatch{% if forloop.first %} is-active{% endif %}"
+        style="
+          {% if variant_image %}
+            background-image: url('{{ variant_image }}');
+          {% else %}
+            background-color: {{ color_value }};
+          {% endif %}
+        "
+        data-color="{{ value }}"
+        data-option-index="{{ color_option_index }}"
+        title="{{ value }}"
+        aria-label="{{ value }}"
+      ></button>
+    {% endfor %}
+  </div>
+
+  <script>
+  (function() {
+    const container = document.querySelector('.custom-card-swatches-{{ section_id }}');
+    if (!container || container.dataset.initialized) return;
+    container.dataset.initialized = 'true';
+
+    container.querySelectorAll('.swatch').forEach(swatch => {
+      swatch.addEventListener('click', function() {
+        container.querySelectorAll('.swatch').forEach(s => s.classList.remove('is-active'));
+        this.classList.add('is-active');
+        
+        // Update the card image if possible
+        const card = this.closest('.custom-product-card-{{ section_id }}');
+        const imgContainer = card?.querySelector('.custom-card-image-{{ section_id }}');
+        const primaryImg = imgContainer?.querySelector('.custom-card-image__primary');
+        
+        if (primaryImg && this.style.backgroundImage) {
+          const imgUrl = this.style.backgroundImage.replace('url("', '').replace('")', '').replace('width=100', 'width=800');
+          primaryImg.src = imgUrl;
+        }
+      });
+    });
+  })();
+  </script>
+{% endif %}

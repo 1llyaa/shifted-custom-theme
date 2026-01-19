@@ -1,0 +1,57 @@
+{% doc %}
+  Renders the product title for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign tag = block.settings.tag
+  assign font_size = block.settings.font_size
+  assign font_weight = block.settings.font_weight
+  assign color = block.settings.color
+  assign hover_color = block.settings.hover_color
+  assign alignment = block.settings.alignment
+  assign line_clamp = block.settings.line_clamp
+  assign link_title = block.settings.link_title
+%}
+
+{% style %}
+  .custom-card-title-{{ section_id }} {
+    font-size: {{ font_size }}px;
+    font-weight: {{ font_weight }};
+    color: {{ color }};
+    text-align: {{ alignment }};
+    margin: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: {{ line_clamp }};
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  {% if link_title %}
+    .custom-card-title-{{ section_id }} a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 200ms ease;
+    }
+
+    .custom-card-title-{{ section_id }} a:hover {
+      color: {{ hover_color }};
+    }
+  {% endif %}
+{% endstyle %}
+
+<{{ tag }} class="custom-card-title-{{ section_id }}" {{ block.shopify_attributes }}>
+  {% if product != blank %}
+    {% if link_title %}
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    {% else %}
+      {{ product.title }}
+    {% endif %}
+  {% else %}
+    {{ 'content.product_card_placeholder' | t | default: 'Product title' }}
+  {% endif %}
+</{{ tag }}>

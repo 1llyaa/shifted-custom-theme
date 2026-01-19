@@ -1,0 +1,76 @@
+{% doc %}
+  Renders sale/sold out badge for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign position = block.settings.position
+  assign sale_bg = block.settings.sale_bg
+  assign sale_text = block.settings.sale_text
+  assign sold_out_bg = block.settings.sold_out_bg
+  assign sold_out_text = block.settings.sold_out_text
+  assign font_size = block.settings.font_size
+  assign border_radius = block.settings.border_radius
+  
+  assign show_badge = false
+  assign badge_type = ''
+  
+  if product != blank
+    if product.available == false
+      assign show_badge = true
+      assign badge_type = 'sold-out'
+    elsif product.compare_at_price > product.price
+      assign show_badge = true
+      assign badge_type = 'sale'
+    endif
+  endif
+%}
+
+{% style %}
+  .custom-card-badge-{{ section_id }} {
+    {% if position contains 'overlay' %}
+      position: absolute;
+      z-index: 2;
+      {% if position == 'overlay-top-left' %}
+        top: 8px;
+        left: 8px;
+      {% elsif position == 'overlay-top-right' %}
+        top: 8px;
+        right: 8px;
+      {% endif %}
+    {% endif %}
+  }
+
+  .custom-card-badge-{{ section_id }} .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: {{ font_size }}px;
+    font-weight: 600;
+    border-radius: {{ border_radius }}px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .custom-card-badge-{{ section_id }} .badge--sale {
+    background: {{ sale_bg }};
+    color: {{ sale_text }};
+  }
+
+  .custom-card-badge-{{ section_id }} .badge--sold-out {
+    background: {{ sold_out_bg }};
+    color: {{ sold_out_text }};
+  }
+{% endstyle %}
+
+{% if show_badge %}
+  <div class="custom-card-badge-{{ section_id }}" {{ block.shopify_attributes }}>
+    {% if badge_type == 'sale' %}
+      <span class="badge badge--sale">{{ 'content.product_badge_sale' | t | default: 'Sale' }}</span>
+    {% elsif badge_type == 'sold-out' %}
+      <span class="badge badge--sold-out">{{ 'content.product_badge_sold_out' | t | default: 'Sold out' }}</span>
+    {% endif %}
+  </div>
+{% endif %}

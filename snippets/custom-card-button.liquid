@@ -1,0 +1,191 @@
+{% doc %}
+  Renders the add to cart button for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign button_text = block.settings.button_text
+  assign sold_out_text = block.settings.sold_out_text
+  assign bg_color = block.settings.bg_color
+  assign text_color = block.settings.text_color
+  assign hover_bg = block.settings.hover_bg_color
+  assign hover_text = block.settings.hover_text_color
+  assign border_radius = block.settings.border_radius
+  assign font_size = block.settings.font_size
+  assign font_weight = block.settings.font_weight
+  assign padding_y = block.settings.padding_y
+  assign padding_x = block.settings.padding_x
+  assign full_width = block.settings.full_width
+  assign show_icon = block.settings.show_icon
+  assign icon_position = block.settings.icon_position
+  assign hover_effect = block.settings.hover_effect
+  assign transition_duration = block.settings.transition_duration
+
+  if product != blank
+    assign variant = product.selected_or_first_available_variant
+    assign available = variant.available
+  else
+    assign available = true
+  endif
+%}
+
+{% style %}
+  .custom-card-button-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    {% if icon_position == 'right' %}
+      flex-direction: row-reverse;
+    {% endif %}
+    padding: {{ padding_y }}px {{ padding_x }}px;
+    background: {{ bg_color }};
+    color: {{ text_color }};
+    border: none;
+    border-radius: {{ border_radius }}px;
+    font-size: {{ font_size }}px;
+    font-weight: {{ font_weight }};
+    cursor: pointer;
+    text-decoration: none;
+    {% if full_width %}
+      width: 100%;
+    {% endif %}
+    transition: 
+      background-color {{ transition_duration }}ms ease,
+      color {{ transition_duration }}ms ease,
+      transform {{ transition_duration }}ms ease,
+      box-shadow {{ transition_duration }}ms ease;
+  }
+
+  .custom-card-button-{{ section_id }}:hover:not(:disabled) {
+    background: {{ hover_bg }};
+    color: {{ hover_text }};
+    {% case hover_effect %}
+      {% when 'lift' %}
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      {% when 'scale' %}
+        transform: scale(1.02);
+    {% endcase %}
+  }
+
+  .custom-card-button-{{ section_id }}:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .custom-card-button-{{ section_id }}:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .custom-card-button-{{ section_id }} .button-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .custom-card-button-{{ section_id }} .button-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+  }
+{% endstyle %}
+
+<form 
+  action="{{ routes.cart_add_url }}" 
+  method="post"
+  class="custom-card-button-form-{{ section_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if product != blank %}
+    <input type="hidden" name="id" value="{{ variant.id }}">
+  {% endif %}
+  <input type="hidden" name="quantity" value="1">
+  
+  <button 
+    type="submit" 
+    class="custom-card-button custom-card-button-{{ section_id }}"
+    {% unless available %}disabled{% endunless %}
+  >
+    {% if show_icon %}
+      <span class="button-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+      </span>
+    {% endif %}
+    <span class="button-text">
+      {% if available %}
+        {{ button_text }}
+      {% else %}
+        {{ sold_out_text }}
+      {% endif %}
+    </span>
+  </button>
+</form>
+
+<script>
+(function() {
+  const form = document.querySelector('.custom-card-button-form-{{ section_id }}');
+  if (!form || form.dataset.initialized) return;
+  form.dataset.initialized = 'true';
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const button = form.querySelector('button');
+    const textSpan = button.querySelector('.button-text');
+    const originalText = textSpan.textContent;
+    const formData = new FormData(form);
+    
+    button.disabled = true;
+    textSpan.textContent = '{{ 'products.product.adding' | t | default: 'Adding...' }}';
+    
+    try {
+      const response = await fetch('{{ routes.cart_add_url }}.js', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && !result.status) {
+        textSpan.textContent = '{{ 'products.product.added' | t | default: 'Added!' }}';
+        
+        const cartResponse = await fetch('/cart.js');
+        const cart = await cartResponse.json();
+        
+        document.dispatchEvent(new CustomEvent('cart:update', {
+          bubbles: true,
+          detail: { resource: cart, sourceId: 'custom-card-{{ section_id }}' }
+        }));
+        
+        const cartDrawer = document.querySelector('cart-drawer-component');
+        if (cartDrawer && typeof cartDrawer.open === 'function') {
+          cartDrawer.open();
+        }
+        
+        setTimeout(() => {
+          textSpan.textContent = originalText;
+          button.disabled = false;
+        }, 1500);
+      } else {
+        throw new Error(result.message || 'Error');
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      textSpan.textContent = '{{ 'products.product.error' | t | default: 'Error' }}';
+      setTimeout(() => {
+        textSpan.textContent = originalText;
+        button.disabled = false;
+      }, 2000);
+    }
+  });
+})();
+</script>

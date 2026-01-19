@@ -1,0 +1,87 @@
+{% doc %}
+  Renders the product image for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign aspect_ratio = block.settings.aspect_ratio
+  assign show_second = block.settings.show_second_image
+  assign zoom_on_hover = block.settings.zoom_on_hover
+  assign zoom_amount = block.settings.zoom_amount | divided_by: 100.0
+  assign transition_duration = block.settings.transition_duration
+  assign border_radius = block.settings.border_radius
+%}
+
+{% style %}
+  .custom-card-image-{{ section_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ border_radius }}px;
+    {% if aspect_ratio != 'auto' %}
+      aspect-ratio: {{ aspect_ratio }};
+    {% endif %}
+  }
+
+  .custom-card-image-{{ section_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform {{ transition_duration }}ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity {{ transition_duration }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  {% if show_second and product.media.size > 1 %}
+    .custom-card-image-{{ section_id }} .custom-card-image__secondary {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+
+    @media (any-pointer: fine) {
+      .custom-product-card-{{ section_id }}:hover .custom-card-image-{{ section_id }} .custom-card-image__secondary {
+        opacity: 1;
+      }
+      
+      .custom-product-card-{{ section_id }}:hover .custom-card-image-{{ section_id }} .custom-card-image__primary {
+        opacity: 0;
+      }
+    }
+  {% endif %}
+
+  {% if zoom_on_hover %}
+    @media (any-pointer: fine) and (prefers-reduced-motion: no-preference) {
+      .custom-product-card-{{ section_id }}:hover .custom-card-image-{{ section_id }} img {
+        transform: scale({{ zoom_amount }});
+      }
+    }
+  {% endif %}
+{% endstyle %}
+
+<div class="custom-card-image-{{ section_id }}" {{ block.shopify_attributes }}>
+  {% if product != blank and product.featured_media %}
+    {{ product.featured_media 
+      | image_url: width: 800 
+      | image_tag: 
+          class: 'custom-card-image__primary',
+          loading: 'lazy',
+          sizes: '(min-width: 750px) 400px, 100vw'
+    }}
+    
+    {% if show_second and product.media.size > 1 %}
+      {{ product.media[1] 
+        | image_url: width: 800 
+        | image_tag: 
+            class: 'custom-card-image__secondary',
+            loading: 'lazy',
+            sizes: '(min-width: 750px) 400px, 100vw'
+      }}
+    {% endif %}
+  {% else %}
+    <div class="custom-card-image__placeholder" style="background: #f3f4f6; aspect-ratio: 1;">
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+</div>

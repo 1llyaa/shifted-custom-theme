@@ -1,0 +1,70 @@
+{% doc %}
+  Renders the product price for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign font_size = block.settings.font_size
+  assign font_weight = block.settings.font_weight
+  assign color = block.settings.color
+  assign compare_color = block.settings.compare_color
+  assign sale_color = block.settings.sale_color
+  assign alignment = block.settings.alignment
+  assign show_compare = block.settings.show_compare_price
+  
+  if product != blank
+    assign variant = product.selected_or_first_available_variant
+    assign on_sale = false
+    if variant.compare_at_price > variant.price
+      assign on_sale = true
+    endif
+  endif
+%}
+
+{% style %}
+  .custom-card-price-{{ section_id }} {
+    font-size: {{ font_size }}px;
+    font-weight: {{ font_weight }};
+    text-align: {{ alignment }};
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    {% if alignment == 'center' %}
+      justify-content: center;
+    {% elsif alignment == 'right' %}
+      justify-content: flex-end;
+    {% endif %}
+  }
+
+  .custom-card-price-{{ section_id }} .price--current {
+    color: {{ color }};
+  }
+
+  .custom-card-price-{{ section_id }} .price--sale {
+    color: {{ sale_color }};
+  }
+
+  .custom-card-price-{{ section_id }} .price--compare {
+    color: {{ compare_color }};
+    text-decoration: line-through;
+    font-weight: 400;
+  }
+{% endstyle %}
+
+<div class="custom-card-price-{{ section_id }}" {{ block.shopify_attributes }}>
+  {% if product != blank %}
+    {% if on_sale %}
+      <span class="price--sale">{{ variant.price | money }}</span>
+      {% if show_compare %}
+        <span class="price--compare">{{ variant.compare_at_price | money }}</span>
+      {% endif %}
+    {% else %}
+      <span class="price--current">{{ variant.price | money }}</span>
+    {% endif %}
+  {% else %}
+    <span class="price--current">{{ 1999 | money }}</span>
+  {% endif %}
+</div>

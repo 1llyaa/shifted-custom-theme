@@ -219,7 +219,12 @@
                 {{ product_variant.price | money }}
               </p>
               
-              <form class="upsell-form-{{ ai_gen_id }}" action="/cart/add" method="post">
+              <form 
+                class="upsell-form-{{ ai_gen_id }}" 
+                action="{{ routes.cart_add_url }}" 
+                method="post"
+                data-product-image="{{ upsell_product.featured_image | image_url: width: 100 }}"
+              >
                 <input type="hidden" name="id" value="{{ product_variant.id }}">
                 <input type="hidden" name="quantity" value="1">
                 <button 
@@ -273,7 +278,65 @@
   const ADDING_TEXT = '{{ block.settings.button_adding_text }}';
   const ADDED_TEXT = '{{ block.settings.button_added_text }}';
   const ERROR_TEXT = '{{ block.settings.button_error_text }}';
+  const OPEN_CART_DRAWER = {{ block.settings.open_cart_drawer | json }};
   const REDIRECT_TO_CART = {{ block.settings.redirect_to_cart | json }};
+  const ENABLE_FLY_ANIMATION = {{ block.settings.enable_fly_animation | json }};
+  
+  /**
+   * Dispatches the cart:update event to notify theme components
+   * This updates the cart icon bubble and optionally opens the cart drawer
+   * @param {Object} cart - The cart object from Shopify API
+   * @param {number} addedQuantity - The quantity that was just added
+   */
+  function dispatchCartUpdateEvent(cart, addedQuantity) {
+    const event = new CustomEvent('cart:update', {
+      bubbles: true,
+      detail: {
+        resource: cart,
+        sourceId: 'upsell-block-{{ ai_gen_id }}',
+        data: {
+          itemCount: addedQuantity,
+          source: 'upsell-block'
+        }
+      }
+    });
+    document.dispatchEvent(event);
+  }
+  
+  /**
+   * Opens the cart drawer if it exists and has auto-open enabled
+   */
+  function openCartDrawer() {
+    const cartDrawer = document.querySelector('cart-drawer-component');
+    if (cartDrawer && typeof cartDrawer.open === 'function') {
+      cartDrawer.open();
+    }
+  }
+  
+  /**
+   * Animates product image flying to cart icon
+   * Uses the theme's native fly-to-cart custom element
+   * @param {HTMLElement} button - The add to cart button (source)
+   * @param {string} productImage - The product image URL
+   */
+  function animateFlyToCart(button, productImage) {
+    if (!ENABLE_FLY_ANIMATION) return;
+    
+    const cartIcon = document.querySelector('.header-actions__cart-icon');
+    if (!cartIcon || !button || !productImage) return;
+    
+    // Check if the fly-to-cart custom element is defined
+    if (!customElements.get('fly-to-cart')) return;
+    
+    const flyToCartElement = document.createElement('fly-to-cart');
+    flyToCartElement.classList.add('fly-to-cart--quick');
+    flyToCartElement.style.setProperty('background-image', `url(${productImage})`);
+    flyToCartElement.style.setProperty('--start-opacity', '0');
+    flyToCartElement.source = button;
+    flyToCartElement.destination = cartIcon;
+    
+    document.body.appendChild(flyToCartElement);
+  }
   
   function initUpsellForms() {
     const forms = document.querySelectorAll('.upsell-form-{{ ai_gen_id }}');
@@ -289,13 +352,22 @@
         const textSpan = button.querySelector('.button-text');
         const originalText = textSpan ? textSpan.textContent : '';
         const formData = new FormData(form);
+        const quantity = parseInt(formData.get('quantity')) || 1;
+        const productImage = form.dataset.productImage;
+        
+        // Trigger fly-to-cart animation immediately (before button is disabled)
+        animateFlyToCart(button, productImage);
         
         // Disable button and show loading state
         button.disabled = true;
         if (textSpan) textSpan.textContent = ADDING_TEXT;
         
         try {
-          const response = await fetch('/cart/add.js', {
+          const cartAddUrl = typeof Theme !== 'undefined' && Theme.routes?.cart_add_url 
+            ? Theme.routes.cart_add_url 
+            : '{{ routes.cart_add_url | append: '.js' }}';
+          
+          const response = await fetch(cartAddUrl, {
             method: 'POST',
             body: formData
           });
@@ -303,20 +375,31 @@
           const result = await response.json();
           
           if (response.ok && !result.status) {
-            // Success
+            // Success - show added state
             if (textSpan) textSpan.textContent = ADDED_TEXT;
             
-            // Dispatch events for theme compatibility
-            document.dispatchEvent(new CustomEvent('cart:add', { detail: result }));
+            // Fetch updated cart to get total count
+            const cartResponse = await fetch('/cart.js');
+            const cart = await cartResponse.json();
             
-            // Refresh page after short delay to show cart update
-            setTimeout(() => {
-              if (REDIRECT_TO_CART) {
+            // Dispatch the theme's cart:update event
+            // This updates the cart icon bubble with animation
+            dispatchCartUpdateEvent(cart, quantity);
+            
+            // Handle cart drawer or redirect based on settings
+            if (REDIRECT_TO_CART) {
+              setTimeout(() => {
                 window.location.href = '/cart';
-              } else {
-                window.location.reload();
-              }
-            }, 800);
+              }, 500);
+            } else if (OPEN_CART_DRAWER) {
+              openCartDrawer();
+            }
+            
+            // Reset button after delay
+            setTimeout(() => {
+              if (textSpan) textSpan.textContent = originalText;
+              button.disabled = false;
+            }, 1500);
             
           } else {
             throw new Error(result.message || result.description || 'Error');
@@ -333,37 +416,6 @@
         }
       });
     });
-  }
-  
-  async function updateCartCount() {
-    try {
-      const response = await fetch('/cart.js');
-      const cart = await response.json();
-      
-      // Update common cart count selectors
-      const selectors = [
-        '[data-cart-count]',
-        '.cart-count',
-        '.cart-count-bubble',
-        'cart-count-bubble',
-        '.cart-icon-bubble'
-      ];
-      
-      selectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-          el.textContent = cart.item_count;
-          if (cart.item_count > 0) {
-            el.classList.remove('hidden');
-          }
-        });
-      });
-      
-      // Dispatch event for theme cart updates
-      document.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
-      
-    } catch (error) {
-      console.error('Error updating cart:', error);
-    }
   }
   
   // Initialize on DOM ready
@@ -405,9 +457,24 @@
     },
     {
       "type": "checkbox",
+      "id": "enable_fly_animation",
+      "label": "Enable fly-to-cart animation",
+      "default": true,
+      "info": "Shows product image flying to the cart icon when added."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_cart_drawer",
+      "label": "Open cart drawer after adding",
+      "default": true,
+      "info": "Opens the cart drawer to show the added item. Ignored if 'Redirect to cart' is enabled."
+    },
+    {
+      "type": "checkbox",
       "id": "redirect_to_cart",
       "label": "Redirect to cart after adding",
-      "default": false
+      "default": false,
+      "info": "Takes priority over opening the cart drawer."
     },
     {
       "type": "header",

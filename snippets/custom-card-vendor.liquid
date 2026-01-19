@@ -1,0 +1,35 @@
+{% doc %}
+  Renders the product vendor for custom product card.
+  
+  @param {product} product - The product object
+  @param {block} block - The block object with settings
+  @param {string} section_id - The section ID
+{% enddoc %}
+
+{% liquid
+  assign font_size = block.settings.font_size
+  assign color = block.settings.color
+  assign text_transform = block.settings.text_transform
+  assign alignment = block.settings.alignment
+%}
+
+{% style %}
+  .custom-card-vendor-{{ section_id }} {
+    font-size: {{ font_size }}px;
+    color: {{ color }};
+    text-align: {{ alignment }};
+    {% if text_transform != 'none' %}
+      text-transform: {{ text_transform }};
+    {% endif %}
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+{% endstyle %}
+
+<p class="custom-card-vendor-{{ section_id }}" {{ block.shopify_attributes }}>
+  {% if product != blank %}
+    {{ product.vendor }}
+  {% else %}
+    {{ 'content.vendor_placeholder' | t | default: 'Vendor name' }}
+  {% endif %}
+</p>

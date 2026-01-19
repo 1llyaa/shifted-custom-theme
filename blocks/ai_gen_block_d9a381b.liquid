@@ -275,14 +275,6 @@
                           {% comment %} Get the metafield value {% endcomment %}
                           {% assign metafield_value = variant.metafields.custom.frame_photo %}
                           
-                          {% comment %} VISIBLE DEBUG {% endcomment %}
-                          <div style="position: absolute; bottom: -80px; left: 0; font-size: 8px; background: yellow; padding: 2px; z-index: 999; white-space: nowrap; max-width: 180px; overflow: hidden;">
-                            V: {{ variant.title | truncate: 20 }}<br>
-                            Type: {{ metafield_value.type }}<br>
-                            ID: {{ variant.id }}<br>
-                            Has MF: {% if metafield_value %}YES{% else %}NO{% endif %}
-                          </div>
-                          
                           {% if metafield_value %}
                             {% assign swatch_image = metafield_value %}
                             {% break %}
@@ -315,10 +307,6 @@
                     {% endif %}
                     
                     {% if swatch_image %}
-                      {% comment %}
-                        Shopify 2.0 file reference metafields can be used directly with image_url filter
-                        No need to check for .value property
-                      {% endcomment %}
                       <img
                         src="{{ swatch_image | image_url: width: 100 }}"
                         alt="{{ value | escape }}"
@@ -327,10 +315,6 @@
                         height="100"
                         loading="lazy"
                       >
-                    {% else %}
-                      <div style="position: absolute; top: 0; left: 0; font-size: 10px; background: red; color: white; padding: 2px; z-index: 999;">
-                        NO IMG
-                      </div>
                     {% endif %}
                   {% endif %}
                   
@@ -437,8 +421,10 @@
       constructor() {
         super();
         this.productId = this.dataset.productId;
+        this.productUrl = '{{ product.url }}';
         this.variants = [];
         this.selectedOptions = {};
+        this.abortController = null;
         
         // Conditional visibility configuration from block settings
         this.conditionalRules = {
@@ -471,6 +457,7 @@
           const response = await fetch(`/products/${this.getProductHandle()}.js`);
           const productData = await response.json();
           this.variants = productData.variants;
+          this.productData = productData;
           this.initializeSelectedOptions();
           if (this.conditionalRules.enabled) {
             this.updateConditionalVisibility();
@@ -524,7 +511,7 @@
           this.updateConditionalVisibility();
         }
         
-        this.refreshPage();
+        this.updateVariant();
       }
 
       handleDropdownChange(event) {
@@ -536,7 +523,7 @@
           this.updateConditionalVisibility();
         }
         
-        this.refreshPage();
+        this.updateVariant();
       }
 
       /**
@@ -563,17 +550,221 @@
       }
 
       /**
-       * Simple page refresh with new variant
+       * Dispatches the variant:selected event
+       * This notifies the theme that a variant selection is in progress
        */
-      refreshPage() {
+      dispatchVariantSelectedEvent(variant) {
+        const event = new CustomEvent('variant:selected', {
+          bubbles: true,
+          detail: {
+            resource: { id: variant?.id?.toString() || '' }
+          }
+        });
+        this.dispatchEvent(event);
+      }
+
+      /**
+       * Dispatches the variant:update event
+       * This notifies the theme components (price, inventory, form, etc.) to update
+       */
+      dispatchVariantUpdateEvent(variant, html) {
+        const event = new CustomEvent('variant:update', {
+          bubbles: true,
+          detail: {
+            resource: variant,
+            sourceId: 'variant-picker-{{ ai_gen_id }}',
+            data: {
+              html: html,
+              productId: this.productId
+            }
+          }
+        });
+        this.dispatchEvent(event);
+      }
+
+      /**
+       * Update variant without page refresh
+       * Uses the theme's event system to update price, images, form, etc.
+       */
+      async updateVariant() {
         const selectedVariant = this.variants.find(variant => 
           this.variantMatchesOptions(variant, this.selectedOptions)
         );
 
-        if (selectedVariant) {
-          const url = new URL(window.location.href);
-          url.searchParams.set('variant', selectedVariant.id);
-          window.location.href = url.toString();
+        if (!selectedVariant) {
+          console.warn('No matching variant found');
+          return;
+        }
+
+        // Dispatch variant:selected event immediately (disables add-to-cart button during update)
+        this.dispatchVariantSelectedEvent(selectedVariant);
+
+        // Update URL without page refresh
+        const url = new URL(window.location.href);
+        url.searchParams.set('variant', selectedVariant.id);
+        history.replaceState({}, '', url.toString());
+
+        // Update selected info display
+        this.updateSelectedInfo(selectedVariant);
+
+        // Fetch updated section HTML for theme components
+        await this.fetchAndUpdateSection(selectedVariant);
+      }
+
+      /**
+       * Fetches the updated product section and dispatches variant:update event
+       */
+      async fetchAndUpdateSection(variant) {
+        // Abort any pending request
+        if (this.abortController) {
+          this.abortController.abort();
+        }
+        this.abortController = new AbortController();
+
+        try {
+          // Build URL for section rendering
+          const sectionId = this.closest('.shopify-section')?.id?.replace('shopify-section-', '');
+          const requestUrl = `${this.productUrl}?variant=${variant.id}&section_id=${sectionId || 'main-product'}`;
+
+          const response = await fetch(requestUrl, { 
+            signal: this.abortController.signal 
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch section');
+          }
+
+          const responseText = await response.text();
+          const html = new DOMParser().parseFromString(responseText, 'text/html');
+
+          // Update swatch images from the new HTML
+          this.updateSwatchImages(html);
+
+          // Get the full variant object with all properties
+          const fullVariant = this.variants.find(v => v.id === variant.id) || variant;
+
+          // Dispatch variant:update event with HTML for theme components to react
+          this.dispatchVariantUpdateEvent(fullVariant, html);
+
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            // Request was aborted, this is expected behavior
+            return;
+          }
+          console.error('Error fetching section:', error);
+          
+          // Fallback: dispatch event without HTML
+          // Theme components will still update based on variant data
+          const fullVariant = this.variants.find(v => v.id === variant.id) || variant;
+          this.dispatchVariantUpdateEvent(fullVariant, document);
+        }
+      }
+
+      /**
+       * Updates swatch images from the fetched HTML
+       * This is needed because swatch images depend on the combination of selected options
+       * and are rendered server-side via Liquid
+       */
+      updateSwatchImages(html) {
+        try {
+          // Find the new variant picker in the fetched HTML
+          const newPicker = html.querySelector('variant-picker-{{ ai_gen_id }}');
+          if (!newPicker) return;
+
+          // Get all option groups (each option like Color, Size, etc.)
+          const currentOptionGroups = this.querySelectorAll('.ai-variant-picker__option-group-{{ ai_gen_id }}');
+          const newOptionGroups = newPicker.querySelectorAll('.ai-variant-picker__option-group-{{ ai_gen_id }}');
+
+          currentOptionGroups.forEach((currentGroup, groupIndex) => {
+            const newGroup = newOptionGroups[groupIndex];
+            if (!newGroup) return;
+
+            // Get all swatch labels in this group
+            const currentSwatches = currentGroup.querySelectorAll('.ai-variant-picker__swatch-label-{{ ai_gen_id }}');
+            const newSwatches = newGroup.querySelectorAll('.ai-variant-picker__swatch-label-{{ ai_gen_id }}');
+
+            currentSwatches.forEach((currentSwatch, swatchIndex) => {
+              const newSwatch = newSwatches[swatchIndex];
+              if (!newSwatch) return;
+
+              // Update the swatch image
+              const currentImg = currentSwatch.querySelector('.ai-variant-picker__swatch-image-{{ ai_gen_id }}');
+              const newImg = newSwatch.querySelector('.ai-variant-picker__swatch-image-{{ ai_gen_id }}');
+
+              if (newImg) {
+                if (currentImg) {
+                  // Update existing image src
+                  if (currentImg.src !== newImg.src) {
+                    currentImg.src = newImg.src;
+                    currentImg.alt = newImg.alt;
+                  }
+                } else {
+                  // Add new image if it didn't exist before
+                  const clonedImg = newImg.cloneNode(true);
+                  currentSwatch.insertBefore(clonedImg, currentSwatch.firstChild);
+                }
+              } else if (currentImg && !newImg) {
+                // Remove image if it no longer exists in the new HTML
+                currentImg.remove();
+              }
+            });
+          });
+        } catch (error) {
+          console.error('Error updating swatch images:', error);
+        }
+      }
+
+      /**
+       * Updates the selected variant info display
+       */
+      updateSelectedInfo(variant) {
+        const titleElement = this.querySelector('[data-variant-title]');
+        const priceElement = this.querySelector('[data-variant-price]');
+
+        if (titleElement) {
+          // Build filtered title based on conditional logic settings
+          let displayTitle = variant.title;
+          
+          if (this.selectedInfoSettings.hideHiddenOptions && this.conditionalRules.enabled) {
+            const { triggerOptionPosition, triggerOptionValue, targetOptionPosition } = this.conditionalRules;
+            const selectedTriggerValue = this.selectedOptions[triggerOptionPosition];
+            
+            if (selectedTriggerValue === triggerOptionValue) {
+              // Filter out the hidden option from the title
+              const titleParts = variant.title.split(' / ');
+              const filteredParts = titleParts.filter((_, index) => {
+                return (index + 1) !== parseInt(targetOptionPosition);
+              });
+              displayTitle = filteredParts.join(' / ');
+            }
+          }
+          
+          titleElement.textContent = displayTitle;
+        }
+
+        if (priceElement) {
+          if (variant.available) {
+            priceElement.innerHTML = this.formatPrice(variant.price);
+          } else {
+            priceElement.innerHTML = '<span class="ai-variant-picker__unavailable-{{ ai_gen_id }}">Unavailable</span>';
+          }
+        }
+      }
+
+      /**
+       * Formats price using Shopify's money format or custom settings
+       */
+      formatPrice(priceInCents) {
+        const price = priceInCents / 100;
+        
+        try {
+          return new Intl.NumberFormat(this.priceSettings.locale, {
+            style: 'currency',
+            currency: this.priceSettings.currency
+          }).format(price);
+        } catch (error) {
+          // Fallback to basic formatting
+          return `${this.priceSettings.currency} ${price.toFixed(2)}`;
         }
       }
 
