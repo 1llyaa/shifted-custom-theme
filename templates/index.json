@@ -109,6 +109,7 @@
       ],
       "name": "t:test_copy.problem.presets.name",
       "settings": {
+        "image": "shopify://shop_images/M4-mockup.png",
         "image_position": "left",
         "headline": "Vetsina plakatu s auty pusobi levne.",
         "subheadline": "Ten tvuj by nemel.",
@@ -169,6 +170,7 @@
         "headline": "Tohle není plakát.",
         "subheadline": "Tohle je automobilové umění.",
         "conclusion": "Jednoduše: kvalita, kterou poznáš na první pohled.",
+        "image": "shopify://shop_images/M4-mockup_7a0285f3-1c3a-449f-8c0a-625a2e948c54.png",
         "color_scheme": "",
         "padding_top": 60,
         "padding_bottom": 60
@@ -203,6 +205,7 @@
       ],
       "name": "t:test_copy.author.presets.name",
       "settings": {
+        "image": "shopify://shop_images/M4.png",
         "image_position": "left",
         "headline": "Kazdy snimek ma autora. Ne jen rozliseni.",
         "intro_text": "<p>Tyhle plakaty nevznikaji v databance.</p><p>Nevznikaji automaticky.</p><p>A rozhodne nejsou vybrane nahodou.</p>",
@@ -368,6 +371,7 @@
         "urgency_text": "",
         "button_label": "Vyber si svůj plakát",
         "button_link": "",
+        "background_image": "shopify://shop_images/GT3RS.png",
         "overlay_enabled": true,
         "overlay_color": "#000000aa",
         "color_scheme": "",
