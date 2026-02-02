@@ -1,0 +1,291 @@
+<div
+  class="test-copy-solution color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-solution__container page-width">
+    <div class="test-copy-solution__content">
+      {% if section.settings.headline != blank %}
+        <h2 class="test-copy-solution__headline">
+          {{ section.settings.headline }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheadline != blank %}
+        <p class="test-copy-solution__subheadline">
+          {{ section.settings.subheadline }}
+        </p>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <ul class="test-copy-solution__features">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature' %}
+              <li class="test-copy-solution__feature" {{ block.shopify_attributes }}>
+                {% if block.settings.icon != blank %}
+                  <span class="test-copy-solution__feature-icon">{{ block.settings.icon }}</span>
+                {% endif %}
+                <span class="test-copy-solution__feature-text">{{ block.settings.text }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if section.settings.conclusion != blank %}
+        <p class="test-copy-solution__conclusion">
+          {{ section.settings.conclusion }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if section.settings.image != blank %}
+      <div class="test-copy-solution__image-wrapper">
+        {{
+          section.settings.image
+          | image_url: width: 800
+          | image_tag:
+            class: 'test-copy-solution__image',
+            loading: 'lazy'
+        }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-solution {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-solution__container {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+    padding-inline: var(--page-margin, 1.5rem);
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-solution__container {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+
+  .test-copy-solution__content {
+    text-align: center;
+    padding-inline: 1rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-solution__content {
+      text-align: left;
+      padding-inline: 0;
+    }
+  }
+
+  .test-copy-solution__headline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 0.5rem;
+  }
+
+  .test-copy-solution__subheadline {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 2rem;
+    opacity: 0.9;
+  }
+
+  .test-copy-solution__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .test-copy-solution__feature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    padding-inline: 0.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-solution__feature {
+      justify-content: flex-start;
+      padding-inline: 0;
+    }
+  }
+
+  .test-copy-solution__feature-icon {
+    color: rgb(var(--color-accent-rgb, var(--color-foreground-rgb)));
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .test-copy-solution__feature-text {
+    text-align: left;
+  }
+
+  .test-copy-solution__conclusion {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+    font-style: italic;
+  }
+
+  .test-copy-solution__image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .test-copy-solution__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.solution.name",
+  "tag": "section",
+  "class": "test-copy-solution-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "t:test_copy.solution.blocks.feature.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "t:test_copy.solution.blocks.feature.settings.icon",
+          "default": "✓"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:test_copy.solution.blocks.feature.settings.text",
+          "default": "Originální fotografie ve vysokém rozlišení"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.solution.settings.headline",
+      "default": "Tohle není plakát."
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "t:test_copy.solution.settings.subheadline",
+      "default": "Tohle je automobilové umění."
+    },
+    {
+      "type": "text",
+      "id": "conclusion",
+      "label": "t:test_copy.solution.settings.conclusion",
+      "default": "Jednoduše: kvalita, kterou poznáš na první pohled."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:test_copy.solution.settings.image"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.solution.presets.name",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "headline": "Tohle není plakát.",
+        "subheadline": "Tohle je automobilové umění."
+      },
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Originální fotografie ve vysokém rozlišení"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Prémiový papír s perfektní barevnou hloubkou"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Pevný, kvalitní rám – žádné kompromisy"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Navrženo tak, aby pozvedlo celý prostor"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Připraveno k zavěšení. Bez starostí. Bez ladění."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

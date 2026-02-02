@@ -1,0 +1,205 @@
+<div
+  class="test-copy-use-cases color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-use-cases__container page-width">
+    {% if section.settings.headline != blank %}
+      <h2 class="test-copy-use-cases__headline">
+        {{ section.settings.headline }}
+      </h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="test-copy-use-cases__grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'use_case' %}
+            <div class="test-copy-use-cases__card" {{ block.shopify_attributes }}>
+              {% if block.settings.icon != blank %}
+                <span class="test-copy-use-cases__icon">{{ block.settings.icon }}</span>
+              {% endif %}
+              {% if block.settings.title != blank %}
+                <h3 class="test-copy-use-cases__title">{{ block.settings.title }}</h3>
+              {% endif %}
+              {% if block.settings.description != blank %}
+                <p class="test-copy-use-cases__description">{{ block.settings.description }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-use-cases {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-use-cases__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-use-cases__headline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 3rem;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .test-copy-use-cases__grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-use-cases__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  .test-copy-use-cases__card {
+    text-align: center;
+    padding: 2rem;
+    background: rgb(var(--color-foreground-rgb) / 0.03);
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .test-copy-use-cases__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .test-copy-use-cases__icon {
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .test-copy-use-cases__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+  }
+
+  .test-copy-use-cases__description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.use_cases.name",
+  "tag": "section",
+  "class": "test-copy-use-cases-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "use_case",
+      "name": "t:test_copy.use_cases.blocks.use_case.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "t:test_copy.use_cases.blocks.use_case.settings.icon",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:test_copy.use_cases.blocks.use_case.settings.title",
+          "default": "Tvůj prostor"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "t:test_copy.use_cases.blocks.use_case.settings.description",
+          "default": "Popis use case."
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.use_cases.settings.headline",
+      "default": "Kde najde tvůj plakát místo?"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.use_cases.presets.name",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "use_case",
+          "settings": {
+            "icon": "01",
+            "title": "Tvuj prostor",
+            "description": "Predstav si, ze vejdes do sve kancelare, loznice nebo garaze a prvni vec, ktera te prasti do oci, je auto, ktere pro tebe neco znamena."
+          }
+        },
+        {
+          "type": "use_case",
+          "settings": {
+            "icon": "02",
+            "title": "Dokonaly darek",
+            "description": "Pro cloveka, ktery uz ma vsechno. Protoze spravne zvoleny vuz na zdi ma vetsi hodnotu nez dalsi gadget."
+          }
+        },
+        {
+          "type": "use_case",
+          "settings": {
+            "icon": "03",
+            "title": "Tvuj vysneny vuz",
+            "description": "Nemusis ho jeste vlastnit. Ale ten pocit muzes mit kazdy den pred ocima."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

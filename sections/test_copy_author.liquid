@@ -1,0 +1,373 @@
+<div
+  class="test-copy-author color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-author__container page-width {% if section.settings.image != blank %}test-copy-author__container--with-image test-copy-author__container--image-{{ section.settings.image_position }}{% endif %}">
+    {% if section.settings.image != blank %}
+      <div class="test-copy-author__image-wrapper">
+        {{
+          section.settings.image
+          | image_url: width: 800
+          | image_tag:
+            class: 'test-copy-author__image',
+            loading: 'lazy'
+        }}
+      </div>
+    {% endif %}
+
+    <div class="test-copy-author__content">
+      {% if section.settings.headline != blank %}
+        <h2 class="test-copy-author__headline">
+          {{ section.settings.headline }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.intro_text != blank %}
+        <div class="test-copy-author__intro">
+          {{ section.settings.intro_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.highlight_text != blank %}
+        <div class="test-copy-author__highlight">
+          {{ section.settings.highlight_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.transition_text != blank %}
+        <p class="test-copy-author__transition">
+          {{ section.settings.transition_text }}
+        </p>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <ul class="test-copy-author__features">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature' %}
+              <li class="test-copy-author__feature" {{ block.shopify_attributes }}>
+                {% if block.settings.text != blank %}
+                  <span class="test-copy-author__feature-text">{{ block.settings.text }}</span>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if section.settings.conclusion != blank %}
+        <div class="test-copy-author__conclusion">
+          {{ section.settings.conclusion }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-author {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-author__container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* With image layout */
+  .test-copy-author__container--with-image {
+    max-width: 1200px;
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+    text-align: left;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-author__container--with-image {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .test-copy-author__container--image-right .test-copy-author__image-wrapper {
+      order: 2;
+    }
+
+    .test-copy-author__container--image-right .test-copy-author__content {
+      order: 1;
+    }
+  }
+
+  .test-copy-author__image-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+
+  .test-copy-author__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .test-copy-author__content {
+    width: 100%;
+  }
+
+  /* With image - adjust feature alignment */
+  .test-copy-author__container--with-image .test-copy-author__feature {
+    justify-content: flex-start;
+  }
+
+  .test-copy-author__headline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 2rem;
+  }
+
+  .test-copy-author__intro {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+
+  .test-copy-author__intro p {
+    margin: 0 0 0.5rem;
+  }
+
+  .test-copy-author__intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  .test-copy-author__highlight {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: rgb(var(--color-foreground-rgb) / 0.03);
+    border-radius: 12px;
+    border-left: 4px solid rgb(var(--color-accent-rgb, var(--color-foreground-rgb)));
+    text-align: left;
+  }
+
+  .test-copy-author__highlight p {
+    margin: 0 0 0.5rem;
+  }
+
+  .test-copy-author__highlight p:last-child {
+    margin-bottom: 0;
+  }
+
+  .test-copy-author__transition {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    opacity: 0.9;
+  }
+
+  .test-copy-author__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .test-copy-author__feature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+
+  .test-copy-author__feature::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: rgb(var(--color-accent-rgb, var(--color-foreground-rgb)));
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .test-copy-author__feature-text {
+    font-style: italic;
+  }
+
+  .test-copy-author__conclusion {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    opacity: 0.85;
+  }
+
+  .test-copy-author__conclusion p {
+    margin: 0 0 0.5rem;
+  }
+
+  .test-copy-author__conclusion p:last-child {
+    margin-bottom: 0;
+  }
+
+  .test-copy-author__conclusion strong {
+    font-weight: 600;
+    opacity: 1;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.author.name",
+  "tag": "section",
+  "class": "test-copy-author-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "t:test_copy.author.blocks.feature.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:test_copy.author.blocks.feature.settings.text",
+          "default": "vlastni rukopis"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:test_copy.author.settings.image_header"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:test_copy.author.settings.image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:test_copy.author.settings.image_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:test_copy.author.settings.image_left"
+        },
+        {
+          "value": "right",
+          "label": "t:test_copy.author.settings.image_right"
+        }
+      ],
+      "default": "left",
+      "visible_if": "{{ section.settings.image != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "t:test_copy.author.settings.content_header"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.author.settings.headline",
+      "default": "Kazdy snimek ma autora. Ne jen rozliseni."
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "t:test_copy.author.settings.intro_text",
+      "default": "<p>Tyhle plakaty nevznikaji v databance.</p><p>Nevznikaji automaticky.</p><p>A rozhodne nejsou vybrane nahodou.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "highlight_text",
+      "label": "t:test_copy.author.settings.highlight_text",
+      "default": "<p>Kazdou fotografii porizuje automobilovy fotograf,</p><p>ktery auta nejen foti — ale rozumi jim.</p><p></p><p>Nejde o to mit co nejvic snimku.</p><p>Jde o ten spravny moment, svetlo a postoj auta,</p><p>ktery z nej udela vic nez jen objekt.</p>"
+    },
+    {
+      "type": "text",
+      "id": "transition_text",
+      "label": "t:test_copy.author.settings.transition_text",
+      "default": "Proto ma kazdy plakat:"
+    },
+    {
+      "type": "richtext",
+      "id": "conclusion",
+      "label": "t:test_copy.author.settings.conclusion",
+      "default": "<p>Tohle neni masova produkce.</p><p><strong>Tohle je vybrana automobilova fotografie prevedena do fyzicke podoby.</strong></p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.author.presets.name",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "headline": "Kazdy snimek ma autora. Ne jen rozliseni.",
+        "intro_text": "<p>Tyhle plakaty nevznikaji v databance.</p><p>Nevznikaji automaticky.</p><p>A rozhodne nejsou vybrane nahodou.</p>",
+        "highlight_text": "<p>Kazdou fotografii porizuje automobilovy fotograf,</p><p>ktery auta nejen foti — ale rozumi jim.</p><p></p><p>Nejde o to mit co nejvic snimku.</p><p>Jde o ten spravny moment, svetlo a postoj auta,</p><p>ktery z nej udela vic nez jen objekt.</p>",
+        "transition_text": "Proto ma kazdy plakat:"
+      },
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "vlastni rukopis"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "vlastni atmosferu"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "a duvod, proc visi prave na zdi — ne v galerii stock fotek"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

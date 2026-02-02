@@ -1,0 +1,154 @@
+<div
+  class="test-copy-final color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-final__container page-width">
+    <div class="test-copy-final__content">
+      {% if section.settings.headline != blank %}
+        <h2 class="test-copy-final__headline">
+          {{ section.settings.headline }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.positioning != blank %}
+        <div class="test-copy-final__positioning">
+          {{ section.settings.positioning }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_link }}"
+          class="test-copy-final__button button button--primary"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-final {
+    padding-top: var(--section-padding-top, 80px);
+    padding-bottom: var(--section-padding-bottom, 80px);
+    overflow: hidden;
+  }
+
+  .test-copy-final__container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-final__content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .test-copy-final__headline {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .test-copy-final__positioning {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+
+  .test-copy-final__positioning p {
+    margin: 0 0 0.5rem;
+  }
+
+  .test-copy-final__positioning p:last-child {
+    margin-bottom: 0;
+  }
+
+  .test-copy-final__button {
+    margin-top: 0.5rem;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.final.name",
+  "tag": "section",
+  "class": "test-copy-final-wrapper section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.final.settings.headline",
+      "default": "Tvoje vášeň si zaslouží víc než generický plakát."
+    },
+    {
+      "type": "richtext",
+      "id": "positioning",
+      "label": "t:test_copy.final.settings.positioning",
+      "default": "<p>Prémiové automobilové nástěnné umění</p><p>pro lidi, kteří auta nežijí jen na silnici,</p><p>ale i ve svém prostoru.</p><p></p><p>Ne dekorace. Ne levné plakáty.</p><p><strong>Identita na zdi.</strong></p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:test_copy.final.settings.button_label",
+      "default": "Vyber si své auto na zeď"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:test_copy.final.settings.button_link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.final.presets.name",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "headline": "Tvoje vášeň si zaslouží víc než generický plakát."
+      }
+    }
+  ]
+}
+{% endschema %}

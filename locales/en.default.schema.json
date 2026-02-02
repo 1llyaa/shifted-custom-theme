@@ -1172,6 +1172,275 @@
     "x_position": "Horizontal position",
     "y_position": "Vertical position"
   },
+  "test_copy": {
+    "hero": {
+      "name": "LP Hero",
+      "settings": {
+        "background_image": "Background image",
+        "overlay_enabled": "Enable overlay",
+        "overlay_color": "Overlay color",
+        "content_alignment": "Content alignment",
+        "button_style_solid": "Solid",
+        "button_style_outline": "Outline",
+        "button_style_ghost": "Ghost (transparent)",
+        "button_show_arrow": "Show arrow icon",
+        "button_arrow_direction": "Arrow direction",
+        "arrow_right": "Right",
+        "arrow_down": "Down",
+        "arrow_diagonal": "Diagonal",
+        "button_border_radius": "Border radius",
+        "button_bg_color": "Background color",
+        "button_text_color": "Text color",
+        "button_bg_hover": "Hover background",
+        "button_text_hover": "Hover text color",
+        "section_height": "Section height"
+      },
+      "blocks": {
+        "heading": {
+          "name": "Heading",
+          "settings": {
+            "text": "Text",
+            "tag": "HTML tag",
+            "size": "Size"
+          }
+        },
+        "text": {
+          "name": "Text",
+          "settings": {
+            "text": "Text",
+            "size": "Size",
+            "opacity": "Opacity"
+          }
+        },
+        "button": {
+          "name": "Button",
+          "settings": {
+            "label": "Label",
+            "link": "Link",
+            "style": "Style"
+          }
+        },
+        "spacer": {
+          "name": "Spacer",
+          "settings": {
+            "height": "Height"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Hero"
+      }
+    },
+    "problem": {
+      "name": "LP Problem awareness",
+      "settings": {
+        "image_header": "Comparison image",
+        "image": "Image",
+        "image_position": "Image position",
+        "content_header": "Content",
+        "headline": "Headline",
+        "subheadline": "Subheadline",
+        "conclusion": "Conclusion text"
+      },
+      "blocks": {
+        "pain_point": {
+          "name": "Pain point",
+          "settings": {
+            "icon": "Icon",
+            "text": "Text"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Problem awareness"
+      }
+    },
+    "solution": {
+      "name": "LP Solution intro",
+      "settings": {
+        "headline": "Headline",
+        "subheadline": "Subheadline",
+        "conclusion": "Conclusion text",
+        "image": "Image"
+      },
+      "blocks": {
+        "feature": {
+          "name": "Feature",
+          "settings": {
+            "icon": "Icon",
+            "text": "Text"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Solution intro"
+      }
+    },
+    "use_cases": {
+      "name": "LP Use cases",
+      "settings": {
+        "headline": "Headline"
+      },
+      "blocks": {
+        "use_case": {
+          "name": "Use case",
+          "settings": {
+            "icon": "Icon",
+            "title": "Title",
+            "description": "Description"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Use cases"
+      }
+    },
+    "social_proof": {
+      "name": "LP Social proof",
+      "settings": {
+        "headline": "Headline"
+      },
+      "blocks": {
+        "testimonial": {
+          "name": "Testimonial",
+          "settings": {
+            "text": "Testimonial text",
+            "author": "Author"
+          }
+        },
+        "trust_badge": {
+          "name": "Trust badge",
+          "settings": {
+            "icon": "Icon",
+            "text": "Text"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Social proof"
+      }
+    },
+    "quality": {
+      "name": "LP Quality breakdown",
+      "settings": {
+        "headline": "Headline",
+        "result_label": "Result label",
+        "result_text": "Result text"
+      },
+      "blocks": {
+        "quality_item": {
+          "name": "Quality item",
+          "settings": {
+            "title": "Feature title",
+            "benefit": "Benefit",
+            "arrow": "Show arrow"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Quality breakdown"
+      }
+    },
+    "offer": {
+      "name": "LP Offer stack",
+      "settings": {
+        "headline": "Headline",
+        "included_title": "Included items title",
+        "optional_title": "Optional items title",
+        "guarantee": "Guarantee text"
+      },
+      "blocks": {
+        "included_item": {
+          "name": "Included item",
+          "settings": {
+            "text": "Text"
+          }
+        },
+        "optional_item": {
+          "name": "Optional item",
+          "settings": {
+            "text": "Text"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Offer stack"
+      }
+    },
+    "cta": {
+      "name": "LP Strong CTA",
+      "settings": {
+        "headline": "Headline",
+        "subtext": "Subtext",
+        "urgency_text": "Urgency text",
+        "button_label": "Button label",
+        "button_link": "Button link",
+        "background_image": "Background image",
+        "overlay_enabled": "Enable overlay",
+        "overlay_color": "Overlay color"
+      },
+      "presets": {
+        "name": "LP Strong CTA"
+      }
+    },
+    "faq": {
+      "name": "LP FAQ",
+      "settings": {
+        "headline": "Headline"
+      },
+      "blocks": {
+        "faq_item": {
+          "name": "FAQ item",
+          "settings": {
+            "question": "Question",
+            "answer": "Answer"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP FAQ"
+      }
+    },
+    "final": {
+      "name": "LP Final reassurance",
+      "settings": {
+        "headline": "Headline",
+        "positioning": "Positioning text",
+        "button_label": "Button label",
+        "button_link": "Button link"
+      },
+      "presets": {
+        "name": "LP Final reassurance"
+      }
+    },
+    "author": {
+      "name": "LP Author/Photographer",
+      "settings": {
+        "image_header": "Image",
+        "image": "Image",
+        "image_position": "Image position",
+        "image_left": "Left",
+        "image_right": "Right",
+        "content_header": "Content",
+        "headline": "Headline",
+        "intro_text": "Intro text",
+        "highlight_text": "Highlight text",
+        "transition_text": "Transition text",
+        "conclusion": "Conclusion"
+      },
+      "blocks": {
+        "feature": {
+          "name": "Feature",
+          "settings": {
+            "text": "Feature text"
+          }
+        }
+      },
+      "presets": {
+        "name": "LP Author/Photographer"
+      }
+    }
+  },
   "text_defaults": {
     "accordion_heading": "Accordion heading",
     "are_purchases_final_sale": "Are any purchases final sale?",

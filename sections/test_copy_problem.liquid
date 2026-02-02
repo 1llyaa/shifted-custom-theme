@@ -1,0 +1,319 @@
+<div
+  class="test-copy-problem color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-problem__container page-width {% if section.settings.image != blank %}test-copy-problem__container--with-image test-copy-problem__container--image-{{ section.settings.image_position }}{% endif %}">
+    
+    {% if section.settings.image != blank %}
+      <div class="test-copy-problem__image-wrapper">
+        {{
+          section.settings.image
+          | image_url: width: 800
+          | image_tag:
+            class: 'test-copy-problem__image',
+            loading: 'lazy'
+        }}
+      </div>
+    {% endif %}
+
+    <div class="test-copy-problem__content">
+      {% if section.settings.headline != blank %}
+        <h2 class="test-copy-problem__headline">
+          {{ section.settings.headline }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheadline != blank %}
+        <p class="test-copy-problem__subheadline">
+          {{ section.settings.subheadline }}
+        </p>
+      {% endif %}
+
+      {% assign pain_points = section.blocks | where: 'type', 'pain_point' %}
+      {% if pain_points.size > 0 %}
+        <ul class="test-copy-problem__list">
+          {% for block in pain_points %}
+            <li class="test-copy-problem__item" {{ block.shopify_attributes }}>
+              {% if block.settings.icon != blank %}
+                <span class="test-copy-problem__icon">{{ block.settings.icon }}</span>
+              {% endif %}
+              <span class="test-copy-problem__text">{{ block.settings.text }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if section.settings.conclusion != blank %}
+        <div class="test-copy-problem__conclusion">
+          {{ section.settings.conclusion }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-problem {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-problem__container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* Without image - centered layout */
+  .test-copy-problem__content {
+    text-align: center;
+  }
+
+  /* With image - two column layout */
+  .test-copy-problem__container--with-image {
+    max-width: 1200px;
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-problem__container--with-image {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .test-copy-problem__container--image-right .test-copy-problem__image-wrapper {
+      order: 2;
+    }
+
+    .test-copy-problem__container--image-right .test-copy-problem__content {
+      order: 1;
+    }
+
+    .test-copy-problem__container--with-image .test-copy-problem__content {
+      text-align: left;
+    }
+  }
+
+  .test-copy-problem__image-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+
+  .test-copy-problem__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .test-copy-problem__headline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 0.75rem;
+  }
+
+  .test-copy-problem__subheadline {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 2rem;
+    opacity: 0.9;
+  }
+
+  .test-copy-problem__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .test-copy-problem__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    opacity: 0.85;
+    text-align: left;
+  }
+
+  .test-copy-problem__icon {
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+    flex-shrink: 0;
+  }
+
+  .test-copy-problem__text {
+    text-align: left;
+  }
+
+  .test-copy-problem__conclusion {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.7;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .test-copy-problem__conclusion p {
+    margin: 0 0 0.5rem;
+  }
+
+  .test-copy-problem__conclusion p:last-child {
+    margin-bottom: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.problem.name",
+  "tag": "section",
+  "class": "test-copy-problem-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "pain_point",
+      "name": "t:test_copy.problem.blocks.pain_point.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "t:test_copy.problem.blocks.pain_point.settings.icon",
+          "default": "✗"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:test_copy.problem.blocks.pain_point.settings.text",
+          "default": "Genericke obrazky, ktere vidis vsude."
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:test_copy.problem.settings.image_header"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:test_copy.problem.settings.image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:test_copy.problem.settings.image_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "left",
+      "visible_if": "{{ section.settings.image != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "t:test_copy.problem.settings.content_header"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.problem.settings.headline",
+      "default": "Vetsina plakatu s auty pusobi levne."
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "t:test_copy.problem.settings.subheadline",
+      "default": "Ten tvuj by nemel."
+    },
+    {
+      "type": "richtext",
+      "id": "conclusion",
+      "label": "t:test_copy.problem.settings.conclusion",
+      "default": "<p>Protoze auto neni jen dopravni prostredek.</p><p>Je to identita. Vasen. Status.</p><p>A to, co visi na tve zdi, by to melo odrazet.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.problem.presets.name",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "headline": "Vetsina plakatu s auty pusobi levne.",
+        "subheadline": "Ten tvuj by nemel."
+      },
+      "blocks": [
+        {
+          "type": "pain_point",
+          "settings": {
+            "icon": "✗",
+            "text": "Genericke obrazky, ktere vidis vsude."
+          }
+        },
+        {
+          "type": "pain_point",
+          "settings": {
+            "icon": "✗",
+            "text": "Nizke rozliseni, rozmazane detaily."
+          }
+        },
+        {
+          "type": "pain_point",
+          "settings": {
+            "icon": "✗",
+            "text": "Tenky papir. Lacine ramy."
+          }
+        },
+        {
+          "type": "pain_point",
+          "settings": {
+            "icon": "✗",
+            "text": "Dekorace, ktere k premiovemu autu proste nepatri."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

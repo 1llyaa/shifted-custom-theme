@@ -1,0 +1,595 @@
+<div
+  class="test-copy-hero color-{{ section.settings.color_scheme }}"
+  style="
+    --hero-min-height: {{ section.settings.section_height }}svh;
+    --hero-padding-top: {{ section.settings.padding_top }}px;
+    --hero-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --content-align: {{ section.settings.content_alignment }};
+  "
+>
+  {% if section.settings.background_image != blank %}
+    <div class="test-copy-hero__background">
+      {{
+        section.settings.background_image
+        | image_url: width: 2000
+        | image_tag:
+          class: 'test-copy-hero__background-image',
+          loading: 'eager',
+          fetchpriority: 'high'
+      }}
+      {% if section.settings.overlay_enabled %}
+        <div
+          class="test-copy-hero__overlay"
+          style="--overlay-color: {{ section.settings.overlay_color }};"
+        ></div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="test-copy-hero__content page-width">
+    <div class="test-copy-hero__blocks-wrapper">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'heading' %}
+            <{{ block.settings.heading_tag }} 
+              class="test-copy-hero__heading test-copy-hero__heading--{{ block.settings.size }}"
+              style="--heading-color: {{ block.settings.color }};"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.text }}
+            </{{ block.settings.heading_tag }}>
+
+          {% when 'text' %}
+            <div 
+              class="test-copy-hero__text test-copy-hero__text--{{ block.settings.size }}"
+              style="--text-color: {{ block.settings.color }}; --text-opacity: {{ block.settings.opacity | divided_by: 100.0 }};"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.text }}
+            </div>
+
+          {% when 'button' %}
+            {% if block.settings.label != blank %}
+              <a
+                href="{{ block.settings.link }}"
+                class="test-copy-hero__button test-copy-hero__button--{{ block.settings.style }}"
+                style="
+                  --btn-bg: {{ block.settings.bg_color }};
+                  --btn-text: {{ block.settings.text_color }};
+                  --btn-bg-hover: {{ block.settings.bg_hover }};
+                  --btn-text-hover: {{ block.settings.text_hover }};
+                  --btn-border-radius: {{ block.settings.border_radius }}px;
+                "
+                {{ block.shopify_attributes }}
+              >
+                <span class="test-copy-hero__button-text">{{ block.settings.label }}</span>
+                {% if block.settings.show_arrow %}
+                  <span class="test-copy-hero__button-arrow">
+                    {% case block.settings.arrow_direction %}
+                      {% when 'right' %}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                      {% when 'down' %}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M12 5v14M5 12l7 7 7-7"/>
+                        </svg>
+                      {% when 'diagonal' %}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M7 17L17 7M7 7h10v10"/>
+                        </svg>
+                    {% endcase %}
+                  </span>
+                {% endif %}
+              </a>
+            {% endif %}
+
+          {% when 'spacer' %}
+            <div 
+              class="test-copy-hero__spacer" 
+              style="--spacer-height: {{ block.settings.height }}px;"
+              {{ block.shopify_attributes }}
+            ></div>
+
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-hero {
+    position: relative;
+    min-height: var(--hero-min-height, 80svh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--hero-padding-top, 40px);
+    padding-bottom: var(--hero-padding-bottom, 40px);
+    overflow: hidden;
+  }
+
+  .test-copy-hero__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .test-copy-hero__background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .test-copy-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--overlay-color, rgba(0, 0, 0, 0.4));
+  }
+
+  .test-copy-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-hero__blocks-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: var(--content-align, center);
+    text-align: var(--content-align, center);
+    gap: 1rem;
+  }
+
+  /* Heading styles */
+  .test-copy-hero__heading {
+    margin: 0;
+    text-wrap: balance;
+    color: var(--heading-color, currentColor);
+  }
+
+  .test-copy-hero__heading--xlarge {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  .test-copy-hero__heading--large {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .test-copy-hero__heading--medium {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .test-copy-hero__heading--small {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* Text styles */
+  .test-copy-hero__text {
+    margin: 0;
+    color: var(--text-color, currentColor);
+    opacity: var(--text-opacity, 0.9);
+  }
+
+  .test-copy-hero__text--large {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    line-height: 1.6;
+  }
+
+  .test-copy-hero__text--medium {
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.6;
+  }
+
+  .test-copy-hero__text--small {
+    font-size: clamp(0.9rem, 1.25vw, 1rem);
+    line-height: 1.5;
+  }
+
+  /* Spacer */
+  .test-copy-hero__spacer {
+    height: var(--spacer-height, 20px);
+  }
+
+  /* Button styles */
+  .test-copy-hero__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--btn-border-radius, 50px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .test-copy-hero__button--solid {
+    background: var(--btn-bg, rgb(var(--color-foreground-rgb)));
+    color: var(--btn-text, rgb(var(--color-background-rgb)));
+    border: none;
+  }
+
+  .test-copy-hero__button--solid:hover {
+    background: var(--btn-bg-hover, rgb(var(--color-foreground-rgb) / 0.85));
+    color: var(--btn-text-hover, rgb(var(--color-background-rgb)));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 0.2);
+  }
+
+  .test-copy-hero__button--outline {
+    background: transparent;
+    color: var(--btn-text, rgb(var(--color-foreground-rgb)));
+    border: 2px solid var(--btn-bg, rgb(var(--color-foreground-rgb)));
+  }
+
+  .test-copy-hero__button--outline:hover {
+    background: var(--btn-bg, rgb(var(--color-foreground-rgb)));
+    color: var(--btn-text-hover, rgb(var(--color-background-rgb)));
+  }
+
+  .test-copy-hero__button--ghost {
+    background: rgb(var(--color-foreground-rgb) / 0.1);
+    color: var(--btn-text, rgb(var(--color-foreground-rgb)));
+    border: none;
+    backdrop-filter: blur(10px);
+  }
+
+  .test-copy-hero__button--ghost:hover {
+    background: rgb(var(--color-foreground-rgb) / 0.2);
+    color: var(--btn-text-hover, rgb(var(--color-foreground-rgb)));
+  }
+
+  .test-copy-hero__button-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .test-copy-hero__button-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+  }
+
+  .test-copy-hero__button-arrow svg {
+    width: 1em;
+    height: 1em;
+  }
+
+  .test-copy-hero__button:hover .test-copy-hero__button-arrow {
+    transform: translateX(4px);
+  }
+
+  @keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.hero.name",
+  "tag": "section",
+  "class": "test-copy-hero-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:test_copy.hero.blocks.heading.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:test_copy.hero.blocks.heading.settings.text",
+          "default": "Your headline here"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "t:test_copy.hero.blocks.heading.settings.tag",
+          "options": [
+            { "value": "h1", "label": "H1" },
+            { "value": "h2", "label": "H2" },
+            { "value": "h3", "label": "H3" },
+            { "value": "p", "label": "Paragraph" }
+          ],
+          "default": "h1"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "t:test_copy.hero.blocks.heading.settings.size",
+          "options": [
+            { "value": "xlarge", "label": "t:options.extra_large" },
+            { "value": "large", "label": "t:options.large" },
+            { "value": "medium", "label": "t:options.medium" },
+            { "value": "small", "label": "t:options.small" }
+          ],
+          "default": "large"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "t:settings.color"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:test_copy.hero.blocks.text.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:test_copy.hero.blocks.text.settings.text",
+          "default": "<p>Your text content here</p>"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "t:test_copy.hero.blocks.text.settings.size",
+          "options": [
+            { "value": "large", "label": "t:options.large" },
+            { "value": "medium", "label": "t:options.medium" },
+            { "value": "small", "label": "t:options.small" }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "range",
+          "id": "opacity",
+          "label": "t:test_copy.hero.blocks.text.settings.opacity",
+          "min": 50,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 90
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "t:settings.color"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:test_copy.hero.blocks.button.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:test_copy.hero.blocks.button.settings.label",
+          "default": "Button"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:test_copy.hero.blocks.button.settings.link"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:test_copy.hero.blocks.button.settings.style",
+          "options": [
+            { "value": "solid", "label": "t:test_copy.hero.settings.button_style_solid" },
+            { "value": "outline", "label": "t:test_copy.hero.settings.button_style_outline" },
+            { "value": "ghost", "label": "t:test_copy.hero.settings.button_style_ghost" }
+          ],
+          "default": "solid"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "t:test_copy.hero.settings.button_show_arrow",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "arrow_direction",
+          "label": "t:test_copy.hero.settings.button_arrow_direction",
+          "options": [
+            { "value": "right", "label": "t:test_copy.hero.settings.arrow_right" },
+            { "value": "down", "label": "t:test_copy.hero.settings.arrow_down" },
+            { "value": "diagonal", "label": "t:test_copy.hero.settings.arrow_diagonal" }
+          ],
+          "default": "right",
+          "visible_if": "{{ block.settings.show_arrow }}"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "t:test_copy.hero.settings.button_border_radius",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "t:content.colors"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "t:test_copy.hero.settings.button_bg_color",
+          "default": "#1a1a1a"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "t:test_copy.hero.settings.button_text_color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "bg_hover",
+          "label": "t:test_copy.hero.settings.button_bg_hover",
+          "default": "#333333"
+        },
+        {
+          "type": "color",
+          "id": "text_hover",
+          "label": "t:test_copy.hero.settings.button_text_hover",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "spacer",
+      "name": "t:test_copy.hero.blocks.spacer.name",
+      "settings": [
+        {
+          "type": "range",
+          "id": "height",
+          "label": "t:test_copy.hero.blocks.spacer.settings.height",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:test_copy.hero.settings.background_image"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_enabled",
+      "label": "t:test_copy.hero.settings.overlay_enabled",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:test_copy.hero.settings.overlay_color",
+      "default": "#00000066"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "t:test_copy.hero.settings.content_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "t:test_copy.hero.settings.section_height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 80
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.hero.presets.name",
+      "category": "t:categories.banners",
+      "settings": {
+        "section_height": 80,
+        "overlay_enabled": true,
+        "content_alignment": "center"
+      },
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {
+            "text": "Promen svou vasen pro auta v umeni",
+            "heading_tag": "h1",
+            "size": "large"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p>Premiove automobilove plakaty z originalnich, vysoce detailnich fotografii. Zaramovane. Pripravene viset. Neprehlédnutelne.</p>",
+            "size": "large",
+            "opacity": 90
+          }
+        },
+        {
+          "type": "spacer",
+          "settings": {
+            "height": 16
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Najdi sve auto",
+            "style": "solid",
+            "show_arrow": true,
+            "arrow_direction": "right",
+            "border_radius": 50,
+            "bg_color": "#1a1a1a",
+            "text_color": "#ffffff"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,265 @@
+<div
+  class="test-copy-quality color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-quality__container page-width">
+    {% if section.settings.headline != blank %}
+      <h2 class="test-copy-quality__headline">
+        {{ section.settings.headline }}
+      </h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="test-copy-quality__grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'quality_item' %}
+            <div class="test-copy-quality__item" {{ block.shopify_attributes }}>
+              <div class="test-copy-quality__item-header">
+                {% if block.settings.title != blank %}
+                  <h3 class="test-copy-quality__item-title">{{ block.settings.title }}</h3>
+                {% endif %}
+                {% if block.settings.arrow %}
+                  <span class="test-copy-quality__arrow">→</span>
+                {% endif %}
+              </div>
+              {% if block.settings.benefit != blank %}
+                <p class="test-copy-quality__item-benefit">{{ block.settings.benefit }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.result_label != blank or section.settings.result_text != blank %}
+      <div class="test-copy-quality__result">
+        {% if section.settings.result_label != blank %}
+          <span class="test-copy-quality__result-label">{{ section.settings.result_label }}</span>
+        {% endif %}
+        {% if section.settings.result_text != blank %}
+          <p class="test-copy-quality__result-text">{{ section.settings.result_text }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-quality {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-quality__container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-quality__headline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 2.5rem;
+    text-align: center;
+  }
+
+  .test-copy-quality__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .test-copy-quality__item {
+    padding: 1.25rem 1.5rem;
+    background: rgb(var(--color-foreground-rgb) / 0.03);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+
+  .test-copy-quality__item:hover {
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .test-copy-quality__item-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .test-copy-quality__item-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .test-copy-quality__arrow {
+    color: rgb(var(--color-accent-rgb, var(--color-foreground-rgb)));
+    font-weight: bold;
+  }
+
+  .test-copy-quality__item-benefit {
+    font-size: 0.95rem;
+    margin: 0;
+    opacity: 0.8;
+    padding-left: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-quality__item-benefit {
+      padding-left: 1.5rem;
+    }
+  }
+
+  .test-copy-quality__result {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgb(var(--color-accent-rgb, var(--color-foreground-rgb)) / 0.1);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .test-copy-quality__result-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+  }
+
+  .test-copy-quality__result-text {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.quality.name",
+  "tag": "section",
+  "class": "test-copy-quality-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "quality_item",
+      "name": "t:test_copy.quality.blocks.quality_item.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:test_copy.quality.blocks.quality_item.settings.title",
+          "default": "Vysoké rozlišení tisku"
+        },
+        {
+          "type": "text",
+          "id": "benefit",
+          "label": "t:test_copy.quality.blocks.quality_item.settings.benefit",
+          "default": "ostré detaily, hlubší barvy"
+        },
+        {
+          "type": "checkbox",
+          "id": "arrow",
+          "label": "t:test_copy.quality.blocks.quality_item.settings.arrow",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.quality.settings.headline",
+      "default": "Proč tenhle plakát působí jinak"
+    },
+    {
+      "type": "text",
+      "id": "result_label",
+      "label": "t:test_copy.quality.settings.result_label",
+      "default": "Výsledek?"
+    },
+    {
+      "type": "text",
+      "id": "result_text",
+      "label": "t:test_copy.quality.settings.result_text",
+      "default": "Plakát, který nejen vidíš, ale cítíš."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.quality.presets.name",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "quality_item",
+          "settings": {
+            "title": "Vysoke rozliseni tisku",
+            "benefit": "ostre detaily, hlubsi barvy",
+            "arrow": true
+          }
+        },
+        {
+          "type": "quality_item",
+          "settings": {
+            "title": "Silny premiovy papir",
+            "benefit": "zadny plakatovy pocit",
+            "arrow": true
+          }
+        },
+        {
+          "type": "quality_item",
+          "settings": {
+            "title": "Masivni ram",
+            "benefit": "stabilita, elegance, dlouha zivotnost",
+            "arrow": true
+          }
+        },
+        {
+          "type": "quality_item",
+          "settings": {
+            "title": "Originalni fotografie",
+            "benefit": "zadna stockova nuda",
+            "arrow": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

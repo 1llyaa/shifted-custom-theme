@@ -1,0 +1,258 @@
+<div
+  class="test-copy-social-proof color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-social-proof__container page-width">
+    {% if section.settings.headline != blank %}
+      <h2 class="test-copy-social-proof__headline">
+        {{ section.settings.headline }}
+      </h2>
+    {% endif %}
+
+    {% assign testimonials = section.blocks | where: 'type', 'testimonial' %}
+    {% if testimonials.size > 0 %}
+      <div class="test-copy-social-proof__testimonials">
+        {% for block in testimonials %}
+          <blockquote class="test-copy-social-proof__quote" {{ block.shopify_attributes }}>
+            {% if block.settings.text != blank %}
+              <p class="test-copy-social-proof__quote-text">„{{ block.settings.text }}"</p>
+            {% endif %}
+            {% if block.settings.author != blank %}
+              <cite class="test-copy-social-proof__author">— {{ block.settings.author }}</cite>
+            {% endif %}
+          </blockquote>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% assign trust_badges = section.blocks | where: 'type', 'trust_badge' %}
+    {% if trust_badges.size > 0 %}
+      <div class="test-copy-social-proof__badges">
+        {% for block in trust_badges %}
+          <div class="test-copy-social-proof__badge" {{ block.shopify_attributes }}>
+            {% if block.settings.icon != blank %}
+              <span class="test-copy-social-proof__badge-icon">{{ block.settings.icon }}</span>
+            {% endif %}
+            {% if block.settings.text != blank %}
+              <span class="test-copy-social-proof__badge-text">{{ block.settings.text }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-social-proof {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-social-proof__container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-social-proof__headline {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 2.5rem;
+  }
+
+  .test-copy-social-proof__testimonials {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .test-copy-social-proof__testimonials {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+  }
+
+  .test-copy-social-proof__quote {
+    margin: 0;
+    padding: 1.5rem;
+    background: rgb(var(--color-foreground-rgb) / 0.03);
+    border-radius: 8px;
+    border-left: 3px solid rgb(var(--color-accent-rgb, var(--color-foreground-rgb)));
+  }
+
+  .test-copy-social-proof__quote-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 0 0.75rem;
+    font-style: italic;
+  }
+
+  .test-copy-social-proof__author {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-style: normal;
+  }
+
+  .test-copy-social-proof__badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .test-copy-social-proof__badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .test-copy-social-proof__badge-icon {
+    color: rgb(var(--color-accent-rgb, 76, 175, 80));
+  }
+
+  .test-copy-social-proof__badge-text {
+    opacity: 0.85;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.social_proof.name",
+  "tag": "section",
+  "class": "test-copy-social-proof-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "t:test_copy.social_proof.blocks.testimonial.name",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "t:test_copy.social_proof.blocks.testimonial.settings.text",
+          "default": "Kvalita mě fakt překvapila."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "t:test_copy.social_proof.blocks.testimonial.settings.author",
+          "default": "Martin K."
+        }
+      ]
+    },
+    {
+      "type": "trust_badge",
+      "name": "t:test_copy.social_proof.blocks.trust_badge.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "t:test_copy.social_proof.blocks.trust_badge.settings.icon",
+          "default": "✔"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:test_copy.social_proof.blocks.trust_badge.settings.text",
+          "default": "Tisknuto a rámováno s maximální péčí"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.social_proof.settings.headline",
+      "default": "Co říkají naši zákazníci"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.social_proof.presets.name",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Kvalita mě fakt překvapila.",
+            "author": "Martin K."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Naživo vypadá ještě líp než na fotkách.",
+            "author": "Petr S."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Konečně něco, co nepůsobí jako tuctová dekorace.",
+            "author": "Tomáš M."
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "✔",
+            "text": "Tisknuto a rámováno s maximální péčí"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "✔",
+            "text": "Reálné fotografie v reálných interiérech"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "✔",
+            "text": "Garance spokojenosti"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

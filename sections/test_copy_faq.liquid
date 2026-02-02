@@ -1,0 +1,251 @@
+<div
+  class="test-copy-faq color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="test-copy-faq__container page-width">
+    {% if section.settings.headline != blank %}
+      <h2 class="test-copy-faq__headline">
+        {{ section.settings.headline }}
+      </h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="test-copy-faq__list">
+        {% for block in section.blocks %}
+          {% if block.type == 'faq_item' %}
+            <details class="test-copy-faq__item" {{ block.shopify_attributes }}>
+              <summary class="test-copy-faq__question">
+                <span class="test-copy-faq__question-text">{{ block.settings.question }}</span>
+                <span class="test-copy-faq__toggle">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path class="test-copy-faq__toggle-plus" d="M12 5v14M5 12h14"/>
+                    <path class="test-copy-faq__toggle-minus" d="M5 12h14"/>
+                  </svg>
+                </span>
+              </summary>
+              <div class="test-copy-faq__answer">
+                <p>{{ block.settings.answer }}</p>
+              </div>
+            </details>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-faq {
+    padding-top: var(--section-padding-top, 60px);
+    padding-bottom: var(--section-padding-bottom, 60px);
+    overflow: hidden;
+  }
+
+  .test-copy-faq__container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-faq__headline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 2.5rem;
+    text-align: center;
+  }
+
+  .test-copy-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .test-copy-faq__item {
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .test-copy-faq__item:first-child {
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .test-copy-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+
+  .test-copy-faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .test-copy-faq__question:hover {
+    opacity: 0.8;
+  }
+
+  .test-copy-faq__question-text {
+    flex: 1;
+    text-align: left;
+  }
+
+  .test-copy-faq__toggle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .test-copy-faq__toggle-minus {
+    display: none;
+  }
+
+  .test-copy-faq__item[open] .test-copy-faq__toggle-plus {
+    display: none;
+  }
+
+  .test-copy-faq__item[open] .test-copy-faq__toggle-minus {
+    display: block;
+  }
+
+  .test-copy-faq__answer {
+    padding: 0 0 1.25rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .test-copy-faq__answer p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    opacity: 0.85;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.faq.name",
+  "tag": "section",
+  "class": "test-copy-faq-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "t:test_copy.faq.blocks.faq_item.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "t:test_copy.faq.blocks.faq_item.settings.question",
+          "default": "Jakou velikost zvolit?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "t:test_copy.faq.blocks.faq_item.settings.answer",
+          "default": "Záleží na prostoru – větší formát vynikne, menší skvěle doplní stěnu."
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.faq.settings.headline",
+      "default": "Často kladené otázky"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.faq.presets.name",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Jakou velikost zvolit?",
+            "answer": "Záleží na prostoru – větší formát vynikne, menší skvěle doplní stěnu."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Je rám součástí balení?",
+            "answer": "Ano. Plakát dorazí kompletně zarámovaný."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Jak dlouho trvá doručení?",
+            "answer": "Obvykle několik pracovních dní od objednání."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Hodí se to jako dárek?",
+            "answer": "Rozhodně. Pro milovníky aut ideální volba."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Co když se mi nebude líbit?",
+            "answer": "Vrácení peněz bez komplikací."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

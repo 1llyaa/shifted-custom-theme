@@ -1,0 +1,224 @@
+<div
+  class="test-copy-cta color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  {% if section.settings.background_image != blank %}
+    <div class="test-copy-cta__background">
+      {{
+        section.settings.background_image
+        | image_url: width: 2000
+        | image_tag:
+          class: 'test-copy-cta__background-image',
+          loading: 'lazy'
+      }}
+      {% if section.settings.overlay_enabled %}
+        <div
+          class="test-copy-cta__overlay"
+          style="--overlay-color: {{ section.settings.overlay_color }};"
+        ></div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="test-copy-cta__container page-width">
+    <div class="test-copy-cta__content">
+      {% if section.settings.headline != blank %}
+        <h2 class="test-copy-cta__headline">
+          {{ section.settings.headline }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <p class="test-copy-cta__subtext">
+          {{ section.settings.subtext }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.urgency_text != blank %}
+        <p class="test-copy-cta__urgency">
+          {{ section.settings.urgency_text }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_link }}"
+          class="test-copy-cta__button button button--primary"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .test-copy-cta {
+    position: relative;
+    padding-top: var(--section-padding-top, 80px);
+    padding-bottom: var(--section-padding-bottom, 80px);
+    overflow: hidden;
+  }
+
+  .test-copy-cta__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .test-copy-cta__background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .test-copy-cta__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--overlay-color, rgba(0, 0, 0, 0.6));
+  }
+
+  .test-copy-cta__container {
+    position: relative;
+    z-index: 1;
+    padding-inline: var(--page-margin, 1.5rem);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .test-copy-cta__content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .test-copy-cta__headline {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .test-copy-cta__subtext {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .test-copy-cta__urgency {
+    font-size: 0.95rem;
+    margin: 0;
+    opacity: 0.75;
+    font-style: italic;
+  }
+
+  .test-copy-cta__button {
+    margin-top: 0.5rem;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:test_copy.cta.name",
+  "tag": "section",
+  "class": "test-copy-cta-wrapper section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "t:test_copy.cta.settings.headline",
+      "default": "Pozvedni svůj prostor automobilovým uměním."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "t:test_copy.cta.settings.subtext",
+      "default": "Tiskneme v malých sériích. Nejde o masovou výrobu."
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "t:test_copy.cta.settings.urgency_text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:test_copy.cta.settings.button_label",
+      "default": "Vyber si svůj plakát"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:test_copy.cta.settings.button_link"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:test_copy.cta.settings.background_image"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_enabled",
+      "label": "t:test_copy.cta.settings.overlay_enabled",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:test_copy.cta.settings.overlay_color",
+      "default": "#000000aa"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:test_copy.cta.presets.name",
+      "category": "t:categories.banners",
+      "settings": {
+        "headline": "Pozvedni svůj prostor automobilovým uměním.",
+        "subtext": "Tiskneme v malých sériích. Nejde o masovou výrobu.",
+        "button_label": "Vyber si svůj plakát"
+      }
+    }
+  ]
+}
+{% endschema %}
