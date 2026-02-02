@@ -9,535 +9,437 @@
  */
 {
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "test_copy_hero_PQeN89": {
+      "type": "test_copy_hero",
       "blocks": {
-        "text_YLPk4p": {
+        "heading_KbeDy8": {
+          "type": "heading",
+          "settings": {
+            "text": "Promen svou vasen pro auta v umeni",
+            "heading_tag": "h1",
+            "size": "large",
+            "color": ""
+          }
+        },
+        "text_gYUF8t": {
           "type": "text",
-          "name": "t:names.heading",
           "settings": {
-            "text": "<h1><em>SHIFTED. </em></h1>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h1",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground-heading)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "text": "<p>Premiove automobilove plakaty z originalnich, vysoce detailnich fotografii. Zaramovane. Pripravene viset. Neprehlédnutelne.</p>",
+            "size": "large",
+            "opacity": 90,
+            "color": ""
+          }
         },
-        "button_H9gpTf": {
+        "spacer_W4VQk4": {
+          "type": "spacer",
+          "settings": {
+            "height": 16
+          }
+        },
+        "button_QdbPtz": {
           "type": "button",
-          "name": "t:names.button",
           "settings": {
-            "label": "Prohlédnout kolekci",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
-        },
-        "ai_gen_block_e0374cd_8xRMQN": {
-          "type": "ai_gen_block_e0374cd",
-          "settings": {
-            "button_text": "Prohlédnout kolekci",
-            "button_link": "#kolekce",
-            "button_background": "#000000",
-            "button_hover_background": "#333333",
-            "button_text_color": "#ffffff",
-            "button_hover_text_color": "#ffffff",
-            "border_width": 0,
-            "border_color": "#000000",
-            "border_hover_color": "#333333",
-            "border_radius": 14,
-            "font_size": 14,
-            "font_weight": "500",
-            "text_uppercase": false,
-            "padding_vertical": 12,
-            "padding_horizontal": 24,
-            "show_icon": true,
-            "icon_type": "arrow-right",
-            "icon_position": "right",
-            "icon_size": 16,
-            "full_width": false,
-            "hover_effect": "none",
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
+            "label": "Najdi sve auto",
+            "link": "",
+            "style": "solid",
+            "show_arrow": true,
+            "arrow_direction": "right",
+            "border_radius": 50,
+            "bg_color": "#1a1a1a",
+            "text_color": "#ffffff",
+            "bg_hover": "#333333",
+            "text_hover": "#ffffff"
+          }
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf",
-        "ai_gen_block_e0374cd_8xRMQN"
+        "heading_KbeDy8",
+        "text_gYUF8t",
+        "spacer_W4VQk4",
+        "button_QdbPtz"
       ],
-      "name": "t:names.hero",
+      "name": "t:test_copy.hero.presets.name",
       "settings": {
-        "media_type_1": "image",
-        "image_1": "shopify://shop_images/GT3RS.png",
-        "media_type_2": "image",
-        "stack_media_on_mobile": false,
-        "custom_mobile_media": false,
-        "media_type_1_mobile": "image",
-        "media_type_2_mobile": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "large",
-        "section_height_custom": 50,
-        "color_scheme": "scheme-6",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
-      }
-    },
-    "custom_featured_collection_FRdym3": {
-      "type": "custom-featured-collection",
-      "name": "Custom CG",
-      "settings": {
-        "collection": "frontpage",
-        "products_to_show": 8,
-        "show_header": true,
-        "title": "Featured collection",
-        "show_description": false,
-        "header_alignment": "left",
-        "header_spacing": 32,
-        "title_size": 28,
-        "title_weight": 600,
-        "title_color": "#000000",
-        "description_size": 14,
-        "description_color": "#666666",
-        "show_view_all": true,
-        "view_all_text": "View all",
-        "view_all_size": 14,
-        "view_all_color": "#000000",
-        "view_all_hover_color": "#666666",
-        "columns_desktop": 4,
-        "columns_tablet": 3,
-        "columns_mobile": "2",
-        "grid_gap": 24,
-        "grid_gap_tablet": 16,
-        "grid_gap_mobile": 12,
-        "card_bg": "#ffffff",
-        "card_padding": 0,
-        "card_border_radius": 0,
-        "card_border_width": 0,
-        "card_border_color": "#e5e5e5",
-        "card_content_gap": 12,
-        "card_hover_effect": "lift",
-        "card_lift_amount": 4,
-        "card_hover_border_color": "#000000",
-        "hover_duration": 250,
-        "hover_easing": "cubic-bezier(0.4, 0, 0.2, 1)",
-        "image_ratio": "portrait",
-        "image_border_radius": 0,
-        "show_second_image": true,
-        "image_zoom_on_hover": true,
-        "image_zoom_amount": 105,
-        "show_badges": true,
-        "badge_position": "top-left",
-        "badge_sale_type": "percentage",
-        "badge_offset": 8,
-        "badge_font_size": 11,
-        "badge_border_radius": 4,
-        "badge_sale_bg": "#dc2626",
-        "badge_sale_text": "#ffffff",
-        "badge_sold_out_bg": "#6b7280",
-        "badge_sold_out_text": "#ffffff",
-        "show_vendor": false,
-        "vendor_size": 11,
-        "vendor_color": "#666666",
-        "vendor_transform": "uppercase",
-        "text_gap": 6,
-        "content_padding": 0,
-        "product_title_size": 14,
-        "product_title_weight": 500,
-        "product_title_color": "#000000",
-        "product_title_hover_color": "#666666",
-        "title_lines": 2,
-        "price_size": 14,
-        "price_weight": 500,
-        "price_color": "#000000",
-        "price_sale_color": "#dc2626",
-        "price_compare_color": "#999999",
-        "show_compare_price": true,
-        "show_swatches": false,
-        "swatch_size": 20,
-        "swatch_gap": 6,
-        "swatch_border_radius": 50,
-        "swatch_border_color": "#e5e5e5",
-        "swatch_hover_border": "#000000",
-        "max_swatches": 5,
-        "show_quick_add": true,
-        "enable_fly_animation": true,
-        "open_cart_drawer": true,
-        "button_show_on_hover": false,
-        "button_text": "Add to cart",
-        "button_sold_out_text": "Sold out",
-        "button_adding_text": "Adding...",
-        "button_added_text": "Added!",
-        "button_show_icon": true,
-        "button_bg": "#000000",
-        "button_text_color": "#ffffff",
-        "button_hover_bg": "#333333",
-        "button_hover_text": "#ffffff",
-        "button_border_width": 0,
-        "button_border_color": "#000000",
-        "button_hover_border": "#333333",
-        "button_border_radius": 4,
-        "button_padding_y": 10,
-        "button_padding_x": 16,
-        "button_font_size": 13,
-        "button_font_weight": 500,
-        "full_width": false,
-        "max_width": 1200,
-        "horizontal_padding": 20,
-        "section_bg": "transparent",
+        "overlay_enabled": true,
+        "overlay_color": "#00000066",
+        "content_alignment": "center",
+        "section_height": 80,
+        "color_scheme": "",
         "padding_top": 40,
         "padding_bottom": 40
       }
     },
-    "section_HTFeax": {
-      "type": "section",
+    "test_copy_problem_RYDQap": {
+      "type": "test_copy_problem",
       "blocks": {
-        "text_RPq6ky": {
-          "type": "text",
+        "pain_point_megXpy": {
+          "type": "pain_point",
           "settings": {
-            "text": "<p>Vyrobeno s péčí a bezpodmínečně milované zákazníky – tento ikonický bestseller předčí všechna očekávání.</p>",
-            "width": "fit-content",
-            "max_width": "narrow",
-            "alignment": "left",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "icon": "✗",
+            "text": "Genericke obrazky, ktere vidis vsude."
+          }
         },
-        "logo_THqhmw": {
-          "type": "logo",
+        "pain_point_PFwEwx": {
+          "type": "pain_point",
           "settings": {
-            "inverse": false,
-            "font": "heading",
-            "unit": "percent",
-            "percent_width": 100,
-            "pixel_height": 48,
-            "custom_mobile_size": false,
-            "unit_mobile": "percent",
-            "percent_width_mobile": 100,
-            "pixel_height_mobile": 120,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "icon": "✗",
+            "text": "Nizke rozliseni, rozmazane detaily."
+          }
+        },
+        "pain_point_EVwH89": {
+          "type": "pain_point",
+          "settings": {
+            "icon": "✗",
+            "text": "Tenky papir. Lacine ramy."
+          }
+        },
+        "pain_point_yha7VV": {
+          "type": "pain_point",
+          "settings": {
+            "icon": "✗",
+            "text": "Dekorace, ktere k premiovemu autu proste nepatri."
+          }
         }
       },
       "block_order": [
-        "text_RPq6ky",
-        "logo_THqhmw"
+        "pain_point_megXpy",
+        "pain_point_PFwEwx",
+        "pain_point_EVwH89",
+        "pain_point_yha7VV"
       ],
-      "name": "t:names.large_logo",
+      "name": "t:test_copy.problem.presets.name",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "space-between",
-        "gap": 16,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "color_scheme": "scheme-3",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 40,
-        "padding-block-end": 40
+        "image_position": "left",
+        "headline": "Vetsina plakatu s auty pusobi levne.",
+        "subheadline": "Ten tvuj by nemel.",
+        "conclusion": "<p>Protoze auto neni jen dopravni prostredek.</p><p>Je to identita. Vasen. Status.</p><p>A to, co visi na tve zdi, by to melo odrazet.</p>",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60
       }
     },
-    "section_GGbEne": {
-      "type": "section",
+    "test_copy_solution_3JhqMq": {
+      "type": "test_copy_solution",
       "blocks": {
-        "group_f8geMt": {
-          "type": "group",
+        "feature_7zhHzR": {
+          "type": "feature",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "space-between",
-            "gap": 32,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fill",
-            "custom_height": 100,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-5",
-            "background_media": "image",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "hero-apparel-2",
-            "padding-block-start": 40,
-            "padding-block-end": 40,
-            "padding-inline-start": 40,
-            "padding-inline-end": 40
-          },
-          "blocks": {
-            "spacer_nReaVi": {
-              "type": "spacer",
-              "settings": {
-                "size": "pixel",
-                "percent_size": 100,
-                "pixel_size": 16,
-                "custom_mobile_size": false,
-                "size_mobile": "percent",
-                "percent_size_mobile": 100,
-                "pixel_size_mobile": 120
-              },
-              "blocks": {}
-            },
-            "text_r9MTkf": {
-              "type": "text",
-              "settings": {
-                "text": "<h3>Novinky</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h3",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_UQayEQ": {
-              "type": "button",
-              "settings": {
-                "label": "Nakupujte nyní",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "link",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "spacer_nReaVi",
-            "text_r9MTkf",
-            "button_UQayEQ"
-          ]
+            "icon": "✓",
+            "text": "Originální fotografie ve vysokém rozlišení"
+          }
         },
-        "group_MAmWpy": {
-          "type": "group",
+        "feature_6h3i7K": {
+          "type": "feature",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "space-between",
-            "gap": 32,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fill",
-            "custom_height": 100,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-5",
-            "background_media": "image",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "hero-apparel-1",
-            "padding-block-start": 40,
-            "padding-block-end": 40,
-            "padding-inline-start": 40,
-            "padding-inline-end": 40
-          },
-          "blocks": {
-            "spacer_YbEANY": {
-              "type": "spacer",
-              "settings": {
-                "size": "pixel",
-                "percent_size": 100,
-                "pixel_size": 16,
-                "custom_mobile_size": false,
-                "size_mobile": "percent",
-                "percent_size_mobile": 100,
-                "pixel_size_mobile": 120
-              },
-              "blocks": {}
-            },
-            "text_DLBmra": {
-              "type": "text",
-              "settings": {
-                "text": "<h3>Nejprodávanější</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h3",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_reRiby": {
-              "type": "button",
-              "settings": {
-                "label": "Nakupujte nyní",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "link",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "spacer_YbEANY",
-            "text_DLBmra",
-            "button_reRiby"
-          ]
+            "icon": "✓",
+            "text": "Prémiový papír s perfektní barevnou hloubkou"
+          }
+        },
+        "feature_LJfptk": {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Pevný, kvalitní rám – žádné kompromisy"
+          }
+        },
+        "feature_f8bPwC": {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Navrženo tak, aby pozvedlo celý prostor"
+          }
+        },
+        "feature_nfrQ7B": {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "text": "Připraveno k zavěšení. Bez starostí. Bez ladění."
+          }
         }
       },
       "block_order": [
-        "group_f8geMt",
-        "group_MAmWpy"
+        "feature_7zhHzR",
+        "feature_6h3i7K",
+        "feature_LJfptk",
+        "feature_f8bPwC",
+        "feature_nfrQ7B"
       ],
-      "name": "t:names.split_showcase",
+      "name": "t:test_copy.solution.presets.name",
       "settings": {
-        "content_direction": "row",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 0,
-        "section_width": "full-width",
-        "section_height": "large",
-        "section_height_custom": 50,
+        "headline": "Tohle není plakát.",
+        "subheadline": "Tohle je automobilové umění.",
+        "conclusion": "Jednoduše: kvalita, kterou poznáš na první pohled.",
         "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "test_copy_author_wx8c4M": {
+      "type": "test_copy_author",
+      "blocks": {
+        "feature_JqpQ9i": {
+          "type": "feature",
+          "settings": {
+            "text": "vlastni rukopis"
+          }
+        },
+        "feature_D7njA6": {
+          "type": "feature",
+          "settings": {
+            "text": "vlastni atmosferu"
+          }
+        },
+        "feature_dbfHHc": {
+          "type": "feature",
+          "settings": {
+            "text": "a duvod, proc visi prave na zdi — ne v galerii stock fotek"
+          }
+        }
+      },
+      "block_order": [
+        "feature_JqpQ9i",
+        "feature_D7njA6",
+        "feature_dbfHHc"
+      ],
+      "name": "t:test_copy.author.presets.name",
+      "settings": {
+        "image_position": "left",
+        "headline": "Kazdy snimek ma autora. Ne jen rozliseni.",
+        "intro_text": "<p>Tyhle plakaty nevznikaji v databance.</p><p>Nevznikaji automaticky.</p><p>A rozhodne nejsou vybrane nahodou.</p>",
+        "highlight_text": "<p>Kazdou fotografii porizuje automobilovy fotograf,</p><p>ktery auta nejen foti — ale rozumi jim.</p><p></p><p>Nejde o to mit co nejvic snimku.</p><p>Jde o ten spravny moment, svetlo a postoj auta,</p><p>ktery z nej udela vic nez jen objekt.</p>",
+        "transition_text": "Proto ma kazdy plakat:",
+        "conclusion": "<p>Tohle neni masova produkce.</p><p><strong>Tohle je vybrana automobilova fotografie prevedena do fyzicke podoby.</strong></p>",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "test_copy_use_cases_JRqcQn": {
+      "type": "test_copy_use_cases",
+      "blocks": {
+        "use_case_9PRMDx": {
+          "type": "use_case",
+          "settings": {
+            "icon": "01",
+            "title": "Tvuj prostor",
+            "description": "Predstav si, ze vejdes do sve kancelare, loznice nebo garaze a prvni vec, ktera te prasti do oci, je auto, ktere pro tebe neco znamena."
+          }
+        },
+        "use_case_8gKyPa": {
+          "type": "use_case",
+          "settings": {
+            "icon": "02",
+            "title": "Dokonaly darek",
+            "description": "Pro cloveka, ktery uz ma vsechno. Protoze spravne zvoleny vuz na zdi ma vetsi hodnotu nez dalsi gadget."
+          }
+        },
+        "use_case_giejx3": {
+          "type": "use_case",
+          "settings": {
+            "icon": "03",
+            "title": "Tvuj vysneny vuz",
+            "description": "Nemusis ho jeste vlastnit. Ale ten pocit muzes mit kazdy den pred ocima."
+          }
+        }
+      },
+      "block_order": [
+        "use_case_9PRMDx",
+        "use_case_8gKyPa",
+        "use_case_giejx3"
+      ],
+      "name": "t:test_copy.use_cases.presets.name",
+      "settings": {
+        "headline": "Kde najde tvůj plakát místo?",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "test_copy_quality_A6BKrE": {
+      "type": "test_copy_quality",
+      "blocks": {
+        "quality_item_WE3cwV": {
+          "type": "quality_item",
+          "settings": {
+            "title": "Vysoke rozliseni tisku",
+            "benefit": "ostre detaily, hlubsi barvy",
+            "arrow": true
+          }
+        },
+        "quality_item_W3E9mP": {
+          "type": "quality_item",
+          "settings": {
+            "title": "Silny premiovy papir",
+            "benefit": "zadny plakatovy pocit",
+            "arrow": true
+          }
+        },
+        "quality_item_kjfG3j": {
+          "type": "quality_item",
+          "settings": {
+            "title": "Masivni ram",
+            "benefit": "stabilita, elegance, dlouha zivotnost",
+            "arrow": true
+          }
+        },
+        "quality_item_bCJ7CR": {
+          "type": "quality_item",
+          "settings": {
+            "title": "Originalni fotografie",
+            "benefit": "zadna stockova nuda",
+            "arrow": true
+          }
+        }
+      },
+      "block_order": [
+        "quality_item_WE3cwV",
+        "quality_item_W3E9mP",
+        "quality_item_kjfG3j",
+        "quality_item_bCJ7CR"
+      ],
+      "name": "t:test_copy.quality.presets.name",
+      "settings": {
+        "headline": "Proč tenhle plakát působí jinak",
+        "result_label": "Výsledek?",
+        "result_text": "Plakát, který nejen vidíš, ale cítíš.",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "test_copy_offer_NWR9MB": {
+      "type": "test_copy_offer",
+      "blocks": {
+        "included_item_jAp4Jj": {
+          "type": "included_item",
+          "settings": {
+            "text": "Prémiový automobilový plakát"
+          }
+        },
+        "included_item_3UqNm9": {
+          "type": "included_item",
+          "settings": {
+            "text": "Kvalitní rám"
+          }
+        },
+        "included_item_iAM9qp": {
+          "type": "included_item",
+          "settings": {
+            "text": "Bezpečné ochranné balení"
+          }
+        },
+        "optional_item_6VH9gj": {
+          "type": "optional_item",
+          "settings": {
+            "text": "Různé velikosti"
+          }
+        },
+        "optional_item_F9aVGn": {
+          "type": "optional_item",
+          "settings": {
+            "text": "Limitované edice vybraných vozů"
+          }
+        }
+      },
+      "block_order": [
+        "included_item_jAp4Jj",
+        "included_item_3UqNm9",
+        "included_item_iAM9qp",
+        "optional_item_6VH9gj",
+        "optional_item_F9aVGn"
+      ],
+      "name": "t:test_copy.offer.presets.name",
+      "settings": {
+        "headline": "Co dostaneš",
+        "included_title": "Zahrnuto v ceně:",
+        "optional_title": "Volitelné možnosti:",
+        "guarantee": "Nelíbí se? Vrátíme peníze. Bez řečí.",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "test_copy_cta_NniCha": {
+      "type": "test_copy_cta",
+      "name": "t:test_copy.cta.presets.name",
+      "settings": {
+        "headline": "Pozvedni svůj prostor automobilovým uměním.",
+        "subtext": "Tiskneme v malých sériích. Nejde o masovou výrobu.",
+        "urgency_text": "",
+        "button_label": "Vyber si svůj plakát",
+        "button_link": "",
+        "overlay_enabled": true,
+        "overlay_color": "#000000aa",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "test_copy_faq_eGbciw": {
+      "type": "test_copy_faq",
+      "blocks": {
+        "faq_item_dca9xi": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Jakou velikost zvolit?",
+            "answer": "Záleží na prostoru – větší formát vynikne, menší skvěle doplní stěnu."
+          }
+        },
+        "faq_item_LgYTpm": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Je rám součástí balení?",
+            "answer": "Ano. Plakát dorazí kompletně zarámovaný."
+          }
+        },
+        "faq_item_4ChPBL": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Jak dlouho trvá doručení?",
+            "answer": "Obvykle několik pracovních dní od objednání."
+          }
+        },
+        "faq_item_TKatJp": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Hodí se to jako dárek?",
+            "answer": "Rozhodně. Pro milovníky aut ideální volba."
+          }
+        },
+        "faq_item_hMgxaA": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Co když se mi nebude líbit?",
+            "answer": "Vrácení peněz bez komplikací."
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_dca9xi",
+        "faq_item_LgYTpm",
+        "faq_item_4ChPBL",
+        "faq_item_TKatJp",
+        "faq_item_hMgxaA"
+      ],
+      "name": "t:test_copy.faq.presets.name",
+      "settings": {
+        "headline": "Často kladené otázky",
+        "color_scheme": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "test_copy_final_mmK3U4": {
+      "type": "test_copy_final",
+      "name": "t:test_copy.final.presets.name",
+      "settings": {
+        "headline": "Tvoje vášeň si zaslouží víc než generický plakát.",
+        "positioning": "<p>Prémiové automobilové nástěnné umění</p><p>pro lidi, kteří auta nežijí jen na silnici,</p><p>ale i ve svém prostoru.</p><p></p><p>Ne dekorace. Ne levné plakáty.</p><p><strong>Identita na zdi.</strong></p>",
+        "button_label": "Vyber si své auto na zeď",
+        "button_link": "",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_bottom": 80
       }
     },
     "custom_instagram_feed_Y6anFa": {
@@ -661,10 +563,16 @@
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "custom_featured_collection_FRdym3",
-    "section_HTFeax",
-    "section_GGbEne",
+    "test_copy_hero_PQeN89",
+    "test_copy_problem_RYDQap",
+    "test_copy_solution_3JhqMq",
+    "test_copy_author_wx8c4M",
+    "test_copy_use_cases_JRqcQn",
+    "test_copy_quality_A6BKrE",
+    "test_copy_offer_NWR9MB",
+    "test_copy_cta_NniCha",
+    "test_copy_faq_eGbciw",
+    "test_copy_final_mmK3U4",
     "custom_instagram_feed_Y6anFa"
   ]
 }
