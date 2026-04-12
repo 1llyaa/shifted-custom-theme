@@ -18,7 +18,7 @@
             "text": "Promen svou vasen pro auta v umeni",
             "heading_tag": "h1",
             "size": "large",
-            "color": ""
+            "color": "#ffffff"
           }
         },
         "text_gYUF8t": {
@@ -27,7 +27,7 @@
             "text": "<p>Premiove automobilove plakaty z originalnich, vysoce detailnich fotografii. Zaramovane. Pripravene viset. Neprehlédnutelne.</p>",
             "size": "large",
             "opacity": 90,
-            "color": ""
+            "color": "#ffffff"
           }
         },
         "spacer_W4VQk4": {
@@ -60,6 +60,7 @@
       ],
       "name": "t:test_copy.hero.presets.name",
       "settings": {
+        "background_image": "shopify://shop_images/GT3RS.png",
         "overlay_enabled": true,
         "overlay_color": "#00000066",
         "content_alignment": "center",
@@ -373,7 +374,7 @@
         "button_link": "",
         "background_image": "shopify://shop_images/GT3RS.png",
         "overlay_enabled": true,
-        "overlay_color": "#000000aa",
+        "overlay_color": "#000000ab",
         "color_scheme": "",
         "padding_top": 80,
         "padding_bottom": 80
